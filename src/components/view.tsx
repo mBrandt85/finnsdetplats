@@ -103,7 +103,7 @@ export default function View() {
   return (
     <Container>
       <header>
-        <span>Finns de plats?</span>
+        <span>Finns det plats?</span>
         <UserBadge>
           <img src={user!.photoURL!} alt={user!.displayName!} />
           <div className="display-name">{user!.displayName!}</div>
