@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuth() {
+      return request.auth.uid != null
+        && (
+          request.auth.token.email.matches('.*@cygni[.]se')
+          || request.auth.token.email == 'magnusbrandt85@gmail.com'
+        );
+    }
+
+    match /bookings/{bookingId} {
+
+      function canCreate() {
+        return isAuth()
+          && request.auth.uid == request.resource.data.uid;
+      }
+
+      function canDelete() {
+        return isAuth()
+          && request.auth.uid == resource.data.uid;
+      }
+
+      allow read: if isAuth();
+      allow create: if canCreate();
+      allow delete: if canDelete();
+    }
+  }
+}
