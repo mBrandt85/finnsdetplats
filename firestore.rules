@@ -4,10 +4,7 @@ service cloud.firestore {
 
     function isAuth() {
       return request.auth.uid != null
-        && (
-          request.auth.token.email.matches('.*@cygni[.]se')
-          || request.auth.token.email == 'magnusbrandt85@gmail.com'
-        );
+        && request.auth.token.email.matches('.*@cygni[.]se');
     }
 
     match /bookings/{bookingId} {

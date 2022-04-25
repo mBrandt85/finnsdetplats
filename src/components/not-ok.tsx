@@ -2,8 +2,6 @@ import { faHand } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
 
-import { fadeInOut } from '../utils/keyframes'
-
 const Container = styled.div`
   position: fixed;
   top: 0;
@@ -11,34 +9,35 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 `
 
-const Text = styled.span`
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  font-size: 1.25rem;
-  font-weight: 700;
+const Icon = styled.span`
+  font-size: 10rem;
   color: rgb(6, 155, 229);
-  text-transform: uppercase;
-  letter-spacing: .05rem;
-  animation-name: ${fadeInOut};
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
+`
+
+const Text = styled.div`
+  padding: 1rem;
+  margin-top: 2rem;
+  font-size: 2em;
+  color: rgb(6, 155, 229);
+  text-align: center;
 `
 
 export default function NotOk({ text = 'LOADING' }: { text?: string}) {
   return (
     <Container>
-      <FontAwesomeIcon icon={faHand} />
+      <Icon>
+        <FontAwesomeIcon icon={faHand} />
+      </Icon>
 
       <Text>
-        {text}
+        Cygnianer only!
+        <br />
+        Använd din Cygni Mail
       </Text>
     </Container>
   )

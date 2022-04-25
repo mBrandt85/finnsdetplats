@@ -1,5 +1,4 @@
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
-import { userInfo } from 'os'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -16,7 +15,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 36rem;
 
-  & header {
+  & > header {
     display: flex;
     justify-content: space-between;
     font-family: 'Roboto Condensed', sans-serif;
@@ -96,6 +95,7 @@ export default function View() {
     )
 
     return () => unsubscribe()
+  // eslint-disable-next-line
   }, [week])
 
   if (loading) return <Loading text='hämtar bokningar...' />

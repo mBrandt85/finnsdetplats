@@ -39,8 +39,7 @@ function App() {
 
   if (loading) return <Loading text="kollar att du är ok..." />
 
-  return user!.email!.includes('@cygni.se') 
-    || user!.email! === 'magnusbrandt85@gmail.com'
+  return user!.email!.includes('@cygni.se')
     ? <View /> 
     : <NotOk />
 }

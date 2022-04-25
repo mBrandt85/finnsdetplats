@@ -86,6 +86,7 @@ export default function Book({ type, date, bookings }: Props) {
       if (booked.length >= quantity) setButton('full')
       else setButton('free')
     }
+  // eslint-disable-next-line
   }, [bookings])
 
   return (

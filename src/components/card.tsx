@@ -1,11 +1,13 @@
-import { faInfo, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { faDisplay, faInfoCircle, faParking } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import { Booking } from '../providers/app-state'
 import { fadeIn } from '../utils/keyframes'
 import { isWeekend, parseDate, parseDay, parseMonth } from '../utils/week'
 import Book from './book'
+import Modal from './modal'
 
 interface Styled {
   date: string
@@ -82,15 +84,29 @@ const Container = styled.div<Styled>`
   }
 `
 
+const UserDetails = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: .5rem;
+
+  & > img {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+  }
+
+  & > span {
+    margin-left: .5rem;
+    font-weight: 700;
+  }
+`
+
 export default function Card({ date, bookings }: Props) {
+  const [modal, setModal] = useState<boolean>(false)
   const dBookings = bookings.filter(({ type }) => type === 'd')
   const pBookings = bookings.filter(({ type }) => type === 'p')
 
-  const openInfo = () => {
-
-  }
-
-  return (
+  return <>
     <Container date={date}>
       <div className='date'>
         {parseDate(date)}
@@ -106,7 +122,7 @@ export default function Card({ date, bookings }: Props) {
         </div>
       </div>
 
-      {(dBookings.length > 0 || pBookings.length > 0) && <div className='info' onClick={openInfo}>
+      {(dBookings.length > 0 || pBookings.length > 0) && <div className='info' onClick={() => setModal(!modal)}>
         <FontAwesomeIcon icon={faInfoCircle} />
       </div>}
 
@@ -115,5 +131,31 @@ export default function Card({ date, bookings }: Props) {
         <Book type="p" date={date} bookings={pBookings} />
       </div>
     </Container>
-  )
+
+    {modal && <Modal close={() => setModal(!modal)}>
+      <header>
+        {parseDay(date) + ' ' + parseDate(date) + ' ' + parseMonth(date)}
+      </header>
+
+      <main>
+        {dBookings.length > 0 && <div>
+          <FontAwesomeIcon style={{ fontSize: '1.5rem' }} icon={faDisplay} />
+          {dBookings.map(({ displayName, photoURL }) =>
+            <UserDetails>
+              <img src={photoURL} alt={displayName} />
+              <span>{displayName}</span>
+            </UserDetails>)}
+        </div>}
+
+        {pBookings.length > 0 && <div style={{ marginTop: '2rem' }}>
+          <FontAwesomeIcon style={{ fontSize: '1.5rem' }} icon={faParking} />
+          {pBookings.map(({ displayName, photoURL }) =>
+            <UserDetails>
+              <img src={photoURL} alt={displayName} />
+              <span>{displayName}</span>
+            </UserDetails>)}
+        </div>}
+      </main>
+    </Modal>}
+  </>
 }
