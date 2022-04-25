@@ -20,8 +20,13 @@ const Text = styled.span`
   text-transform: uppercase;
   letter-spacing: .05rem;
   animation-name: ${fadeInOut};
-  animation-duration: 1s;
+  -webkit-animation-name: ${fadeInOut};
+  animation-duration: .5s;
+  -webkit-animation-duration: .5s;
+  animation-timing-function: ease-in;
+  -webkit-animation-timing-function: ease-in;
   animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
 `
 
 export default function Loading({ text = 'LOADING' }: { text?: string}) {

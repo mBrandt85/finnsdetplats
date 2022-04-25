@@ -25,7 +25,11 @@ const Container = styled.div<Styled>`
   box-shadow: 0 .25rem .25rem rgba(0, 0, 0, 15%);
   margin-top: 1rem;
   animation-name: ${fadeIn};
+  -webkit-animation-name: ${fadeIn};
   animation-duration: .3s;
+  -webkit-animation-duration: .3s;
+  animation-timing-function: ease-in;
+  -webkit-animation-timing-function: ease-in;
 
   & .date {
     display: flex;

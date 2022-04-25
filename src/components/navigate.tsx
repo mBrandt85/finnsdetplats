@@ -12,7 +12,11 @@ const Container = styled.div`
   justify-content: space-between;
   width: 100%;
   animation-name: ${fadeIn};
+  -webkit-animation-name: ${fadeIn};
   animation-duration: .3s;
+  -webkit-animation-duration: .3s;
+  animation-timing-function: ease-in;
+  -webkit-animation-timing-function: ease-in;
 `
 
 const Button = styled.span`

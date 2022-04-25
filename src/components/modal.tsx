@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 
-import { fadeIn } from '../utils/keyframes'
-
 interface Props {
   children: ReactNode
   close: () => void
@@ -22,22 +20,17 @@ const Backdrop = styled.div`
   height: 100%;
   z-index: 10;
   padding: 2rem;
-  animation-name: ${fadeIn};
-  animation-duration: .3s;
 `
 
 const Content = styled.div`
 position: relative;
   width: 100%;
-  height: 100%;
   max-width: 24rem;
   max-height: 36rem;
   z-index: 20;
   padding: 1rem;
   border-radius: 1rem;
   background-color: white;
-  animation-name: ${fadeIn};
-  animation-duration: .3s;
 
   & > header {
     font-family: 'Roboto Condensed', sans-serif;

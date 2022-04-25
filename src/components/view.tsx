@@ -23,7 +23,11 @@ const Container = styled.div`
     font-size: 1.6rem;
     letter-spacing: -.025rem;
     animation-name: ${fadeIn};
+    -webkit-animation-name: ${fadeIn};
     animation-duration: .3s;
+    -webkit-animation-duration: .3s;
+    animation-timing-function: ease-in;
+    -webkit-animation-timing-function: ease-in;
 
     > span {
       color: white;

@@ -50,7 +50,11 @@ const Text = styled.span`
   text-transform: uppercase;
   letter-spacing: -.05rem;
   animation-name: ${fadeIn};
+  -webkit-animation-name: ${fadeIn};
   animation-duration: .3s;
+  -webkit-animation-duration: .3s;
+  animation-timing-function: ease-in;
+  -webkit-animation-timing-function: ease-in;
 `
 
 export default function Book({ type, date, bookings }: Props) {
@@ -103,7 +107,7 @@ export default function Book({ type, date, bookings }: Props) {
           ...
         </Text>
         : <Text>
-          {quantity - bookings.length} / {quantity}
+          {bookings.length} / {quantity}
         </Text>
       }
     </Container>
