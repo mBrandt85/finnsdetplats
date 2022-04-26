@@ -1,8 +1,9 @@
+import { signOut } from 'firebase/auth'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { firestore } from '../firebase'
+import { auth, firestore } from '../firebase'
 import { Booking, useAppState } from '../providers/app-state'
 import { fadeIn } from '../utils/keyframes'
 import Card from './card'
@@ -71,6 +72,12 @@ const UserBadge = styled.div`
 export default function View() {
   const { user, week, bookings, addBooking, removeBooking } = useAppState()
   const [loading, setLoading] = useState<boolean>(true)
+  const [clicks, setClicks] = useState<number>(0)
+
+  useEffect(() => {
+    if (clicks === 10) signOut(auth)
+  // eslint-disable-next-line
+  }, [clicks])
 
   useEffect(() => {
     setLoading(true)
@@ -107,7 +114,7 @@ export default function View() {
     <Container>
       <header>
         <span>Finns det plats?</span>
-        <UserBadge>
+        <UserBadge onClick={() => setClicks(clicks + 1)}>
           <img src={user!.photoURL!} alt={user!.displayName!} />
           <div className="display-name">{user!.displayName!}</div>
           <span></span>
