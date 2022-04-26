@@ -74,8 +74,10 @@ export default function View() {
   const [loading, setLoading] = useState<boolean>(true)
   const [clicks, setClicks] = useState<number>(0)
 
+  const logout = async () => await signOut(auth)
+
   useEffect(() => {
-    if (clicks === 10) signOut(auth)
+    if (clicks === 10) logout()
   // eslint-disable-next-line
   }, [clicks])
 

@@ -75,7 +75,7 @@ export default function NotOk() {
         Använd din Cygni Mail
       </Text>
 
-      <SignOut onClick={() => signOut(auth)}>
+      <SignOut onClick={async () => await signOut(auth)}>
         Logga ut och försök igen...
       </SignOut>
     </Container>

@@ -11,7 +11,8 @@ service cloud.firestore {
 
       function canCreate() {
         return isAuth()
-          && request.auth.uid == request.resource.data.uid;
+          && request.auth.uid == request.resource.data.uid
+          && request.resource.data.type in ['d', 'p'];
       }
 
       function canDelete() {
