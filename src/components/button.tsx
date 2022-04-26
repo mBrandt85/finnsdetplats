@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDisplay, faParking } from '@fortawesome/free-solid-svg-icons'
@@ -57,7 +57,7 @@ const Text = styled.span`
   -webkit-animation-timing-function: ease-in;
 `
 
-export default function Book({ type, date, bookings }: Props) {
+export default function Button({ type, date, bookings }: Props) {
   const { user } = useAppState()
   const { uid, displayName, photoURL } = user!
   const [loading, setLoading] = useState<boolean>(false)

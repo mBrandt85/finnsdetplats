@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { Booking } from '../providers/app-state'
 import { fadeIn } from '../utils/keyframes'
 import { isWeekend, parseDate, parseDay, parseMonth } from '../utils/week'
-import Book from './book'
+import Button from './button'
 import Modal from './modal'
 
 interface Styled {
@@ -131,8 +131,8 @@ export default function Card({ date, bookings }: Props) {
       </div>}
 
       <div className='actions'>
-        <Book type="d" date={date} bookings={dBookings} />
-        <Book type="p" date={date} bookings={pBookings} />
+        <Button type="d" date={date} bookings={dBookings} />
+        <Button type="p" date={date} bookings={pBookings} />
       </div>
     </Container>
 

@@ -94,8 +94,7 @@ export default function View() {
             removeBooking(change.doc.id)
         })
         setLoading(false)
-      },
-      _ => setLoading(false)
+      }
     )
 
     return () => unsubscribe()

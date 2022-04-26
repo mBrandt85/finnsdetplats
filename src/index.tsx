@@ -27,13 +27,17 @@ function App() {
   }
 
   useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        setUser(user)
-        setWeek(getWeek())
-        setLoading(false)
-      } else login()
-    })
+    onAuthStateChanged(auth,
+      user => {
+        if (user) {
+          setUser(user)
+          setWeek(getWeek())
+          setLoading(false)
+        } else login()
+      },
+      error => console.log(error),
+      () => console.log('auth state observer removed')
+    )
   // eslint-disable-next-line
   }, [])
 
