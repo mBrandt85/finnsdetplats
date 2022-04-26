@@ -54,7 +54,6 @@ export default function Button({ type, date, bookings }: Props) {
   const { user } = useAppState()
   const { uid, displayName, photoURL } = user!
   const [loading, setLoading] = useState<boolean>(false)
-  const [trigger, setTrigger] = useState<boolean>(false)
   const [button, setButton] = useState<'free' | 'full' | 'check'>('free')
   const booked = bookings.filter(booking => booking.date === date && booking.type === type)
   const personal = booked.filter(booking => booking.uid === uid)
@@ -84,9 +83,6 @@ export default function Button({ type, date, bookings }: Props) {
       if (booked.length >= quantity) setButton('full')
       else setButton('free')
     }
-
-    setTrigger(true)
-    setTimeout(() => setTrigger(false), 1000)
   // eslint-disable-next-line
   }, [bookings])
 
@@ -98,15 +94,7 @@ export default function Button({ type, date, bookings }: Props) {
       }
     }}>
       <FontAwesomeIcon icon={type === 'd' ? faDisplay : faParking} />
-
-      {loading
-        ?<Text>
-          ...
-        </Text>
-        : <Text trigger={trigger}>
-          {bookings.length} / {quantity}
-        </Text>
-      }
+      <Text>{loading ? '...' : `${bookings.length} / ${quantity}`}</Text>
     </Container>
   )
 }
