@@ -1,9 +1,8 @@
-import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDisplay, faParking } from '@fortawesome/free-solid-svg-icons'
 
-import { fadeIn } from '../utils/keyframes'
 import { Booking, useAppState } from '../providers/app-state'
 import { firestore } from '../firebase'
 import { useEffect, useState } from 'react'
@@ -43,24 +42,19 @@ const Container = styled.div<Styled>`
     : 'pointer'};
 `
 
-const Text = styled.span`
+const Text = styled.span<{ trigger?: boolean }>`
   margin-top: .25rem;
   font-size: .8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -.05rem;
-  animation-name: ${fadeIn};
-  -webkit-animation-name: ${fadeIn};
-  animation-duration: .3s;
-  -webkit-animation-duration: .3s;
-  animation-timing-function: ease-in;
-  -webkit-animation-timing-function: ease-in;
 `
 
 export default function Button({ type, date, bookings }: Props) {
   const { user } = useAppState()
   const { uid, displayName, photoURL } = user!
   const [loading, setLoading] = useState<boolean>(false)
+  const [trigger, setTrigger] = useState<boolean>(false)
   const [button, setButton] = useState<'free' | 'full' | 'check'>('free')
   const booked = bookings.filter(booking => booking.date === date && booking.type === type)
   const personal = booked.filter(booking => booking.uid === uid)
@@ -90,6 +84,9 @@ export default function Button({ type, date, bookings }: Props) {
       if (booked.length >= quantity) setButton('full')
       else setButton('free')
     }
+
+    setTrigger(true)
+    setTimeout(() => setTrigger(false), 1000)
   // eslint-disable-next-line
   }, [bookings])
 
@@ -106,7 +103,7 @@ export default function Button({ type, date, bookings }: Props) {
         ?<Text>
           ...
         </Text>
-        : <Text>
+        : <Text trigger={trigger}>
           {bookings.length} / {quantity}
         </Text>
       }

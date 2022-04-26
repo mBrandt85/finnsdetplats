@@ -21,6 +21,25 @@ export const fadeInOut = keyframes`
    }
 `
 
+export const notice = keyframes`
+  0% { 
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+  25% { 
+    transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    opacity: .6;
+    -webkit-opacity: .6;
+  }
+  100% { 
+    transform: scale(1);
+    -webkit-transform: scale(.8);
+    opacity: 1;
+    -webkit-opacity: 1;
+   }
+`
+
 export const fadeIn = keyframes`
   0% { 
     opacity: 0;
