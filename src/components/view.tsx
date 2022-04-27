@@ -92,10 +92,9 @@ export default function View() {
       snapshot => {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
-            const data = change.doc.data() as Booking
             addBooking({
               id: change.doc.id,
-              ...data
+              ...change.doc.data() as Booking
             })
           }
 
