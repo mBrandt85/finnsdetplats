@@ -117,7 +117,7 @@ export default function View() {
         <span>Finns det plats?</span>
         <UserBadge onClick={() => setClicks(clicks + 1)}>
           <img src={user!.photoURL!} alt={user!.displayName!} />
-          <div className="display-name">{user!.displayName!}</div>
+          <div className="display-name">{user!.displayName!.split(' ')[0]}</div>
           <span></span>
         </UserBadge>
       </header>

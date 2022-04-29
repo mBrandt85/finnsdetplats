@@ -19,6 +19,11 @@ function App() {
   const { user, setUser, setWeek } = useAppState()
   const [loading, setLoading] = useState<boolean>(true)
 
+  const specialForces = [
+    'sebastianberglonn@gmail.com',
+    'en.ahmadmarei@gmail.com'
+  ]
+
   const login = async () => {
     const provider = new GoogleAuthProvider()
     provider.addScope('profile')
@@ -43,7 +48,10 @@ function App() {
 
   if (loading) return <Loading text="kollar att du är ok..." />
 
-  return user!.email!.includes('@cygni.se')
+  return (
+    user!.email!.includes('@cygni.se')
+    || specialForces.includes(user!.email!)
+  )
     ? <View /> 
     : <NotOk />
 }
