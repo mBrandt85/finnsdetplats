@@ -63,7 +63,7 @@ const Container = styled.div<Styled>`
     padding: 0 .5rem;
 
     .dayname {
-      font-size: ${({ date }) => isToday(date) ? '1.75rem' : '1.5rem'};
+      font-size: ${({ date }) => isToday(date) ? '1.5rem' : '1.25rem'};
       line-height: ${({ date }) => isToday(date) ? '1.75rem' : '1.5rem'};
       letter-spacing: -.05rem;
       font-family: 'Roboto Condensed', sans-serif;
@@ -71,7 +71,11 @@ const Container = styled.div<Styled>`
       color: ${({ date }) => hasPassed(date) ? 'rgb(180, 180, 180)' 
         : isWeekend(date) ? 'rgb(200, 120, 120)' 
         : '#555'};
-      text-transform: capitalize;
+      text-transform: uppercase;
+
+      :first-letter {
+        font-size: ${({ date }) => isToday(date) ? '2.25rem' : '1.75rem'};
+      }
     }
 
     .month {
