@@ -60,9 +60,9 @@ const Close = styled.div`
 
 export default function Modal({ children, close }: Props) {
   return (
-    <Backdrop>
+    <Backdrop onClick={close}>
       <Content>
-        <Close onClick={close}>
+        <Close>
           <FontAwesomeIcon icon={faXmark} />
         </Close>
 

@@ -17,20 +17,32 @@ const Container = styled.div`
   -webkit-animation-duration: .3s;
   animation-timing-function: ease-in;
   -webkit-animation-timing-function: ease-in;
+
+  @media screen and (min-width: 501px) {
+    padding: 0 1rem 1rem 1rem;
+  }
 `
 
-const Button = styled.span`
+const Button = styled.span<{ next?: boolean; home?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 3rem;
   height: 3rem;
-  border-radius: 50%;
+  border-radius: ${({ next, home }) => next ? '.5rem 50% 50% .5rem' : home ? '.5rem' : '50% .5rem .5rem 50%'};
   background-color: rgb(6, 155, 229);
   font-size: 1.25rem;
   color: white;
-  box-shadow: 0 .25rem .25rem rgba(0, 0, 0, 15%);
   cursor: pointer;
+
+  @media screen and (max-width: 500px) {
+    border-radius: ${({ next, home }) => next ? '1rem 0 0 0' : home ? '1rem 1rem 0 0' : '0 1rem 0 0'};
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 25%);
+  }
+
+  @media screen and (min-width: 501px) {
+    box-shadow: 0 .25rem .25rem rgba(0, 0, 0, 15%);
+  }
 `
 
 export default function Navigate() {
@@ -54,11 +66,11 @@ export default function Navigate() {
         <FontAwesomeIcon icon={faAngleLeft} />
       </Button>
 
-      {show && <Button onClick={handleCurrent}>
+      {show && <Button home onClick={handleCurrent}>
         <FontAwesomeIcon icon={faCalendarDay} />
       </Button>}
 
-      <Button onClick={handleNext}>
+      <Button next onClick={handleNext}>
         <FontAwesomeIcon icon={faAngleRight} />
       </Button>
     </Container>

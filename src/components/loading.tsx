@@ -21,8 +21,8 @@ const Text = styled.span`
   letter-spacing: .05rem;
   animation-name: ${fadeInOut};
   -webkit-animation-name: ${fadeInOut};
-  animation-duration: .5s;
-  -webkit-animation-duration: .5s;
+  animation-duration: 1s;
+  -webkit-animation-duration: 1s;
   animation-timing-function: ease-in;
   -webkit-animation-timing-function: ease-in;
   animation-iteration-count: infinite;

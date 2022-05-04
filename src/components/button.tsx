@@ -6,6 +6,7 @@ import { faDisplay, faParking } from '@fortawesome/free-solid-svg-icons'
 import { Booking, useAppState } from '../providers/app-state'
 import { firestore } from '../firebase'
 import { useEffect, useState } from 'react'
+import { hasPassed, isToday } from '../utils/week'
 
 interface Styled {
   button: string
@@ -26,11 +27,12 @@ const Container = styled.div<Styled>`
   height: 100%;
   border-radius: .5rem;
   background-color: ${({ button }) => 
-    button === 'check' ? 'rgb(240, 240, 240)' 
+    button === 'check' ? 'rgb(230, 250, 255)' 
     : button === 'free' ? 'rgb(200, 250, 200)' 
     : 'none'};
   color: ${({ button }) => 
-    button === 'check' ? 'rgb(6, 155, 229)' 
+    button === 'passed' ? 'rgb(150, 150, 150)'
+    : button === 'check' ? 'rgb(6, 155, 229)' 
     : button === 'free' ? 'rgb(40, 100, 40)' 
     : 'rgb(130, 0, 0)'};
   box-shadow: ${({ button }) => 
@@ -42,9 +44,9 @@ const Container = styled.div<Styled>`
     : 'pointer'};
 `
 
-const Text = styled.span<{ trigger?: boolean }>`
+const Text = styled.span<{ date: string; trigger?: boolean }>`
   margin-top: .25rem;
-  font-size: .8rem;
+  font-size: ${({ date }) => isToday(date) ? '1rem' : '.8rem'};
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -.05rem;
@@ -54,7 +56,7 @@ export default function Button({ type, date, bookings }: Props) {
   const { user } = useAppState()
   const { uid, displayName, photoURL } = user!
   const [loading, setLoading] = useState<boolean>(false)
-  const [button, setButton] = useState<'free' | 'full' | 'check'>('free')
+  const [button, setButton] = useState<'passed' | 'free' | 'full' | 'check'>('free')
   const booked = bookings.filter(booking => booking.date === date && booking.type === type)
   const personal = booked.filter(booking => booking.uid === uid)
   const quantity = type === 'd' ? 8 : 3
@@ -78,10 +80,13 @@ export default function Button({ type, date, bookings }: Props) {
   }
 
   useEffect(() => {
-    if (personal.length > 0) setButton('check')
+    if (hasPassed(date)) setButton('passed')
     else {
-      if (booked.length >= quantity) setButton('full')
-      else setButton('free')
+      if (personal.length > 0) setButton('check')
+      else {
+        if (booked.length >= quantity) setButton('full')
+        else setButton('free')
+      }
     }
   // eslint-disable-next-line
   }, [bookings])
@@ -89,12 +94,15 @@ export default function Button({ type, date, bookings }: Props) {
   return (
     <Container button={button} onClick={() => {
       if (!loading) {
-        if (button === 'check') handleDelete()
-        if (button !== 'check' && button === 'free') handleAdd()
+        if (button === 'check' && !hasPassed(date)) handleDelete()
+        if (button !== 'check' && button === 'free' && !hasPassed(date)) handleAdd()
       }
     }}>
-      <FontAwesomeIcon icon={type === 'd' ? faDisplay : faParking} />
-      <Text>{loading ? '...' : `${bookings.length} / ${quantity}`}</Text>
+      <FontAwesomeIcon 
+        icon={type === 'd' ? faDisplay : faParking} 
+        style={{ fontSize: isToday(date) ? '1.25rem' : '1rem' }}
+      />
+      <Text date={date}>{loading ? '...' : `${bookings.length} / ${quantity}`}</Text>
     </Container>
   )
 }

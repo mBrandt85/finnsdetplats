@@ -28,6 +28,28 @@ export function nextWeek(d: string): Day[] {
   return getWeek(date)
 }
 
+export function isToday(d: string): boolean {
+  const date = new Date(d)
+  const today = new Date(Date.now())
+  if (
+    (date.getFullYear() === today.getFullYear())
+    && (date.getMonth() === today.getMonth())
+    && (date.getDate() === today.getDate())
+  ) return true
+  return false
+}
+
+export function hasPassed(d: string): boolean {
+  const date = new Date(d)
+  const today = new Date(Date.now())
+  today.setHours(0)
+  today.setMinutes(0)
+  today.setSeconds(0)
+  today.setMilliseconds(0)
+  if (today.toISOString() > date.toISOString()) return true
+  return false
+}
+
 export function isWeekend(d: string): boolean {
   const date = new Date(d)
   if (date.getDay() === 0 || date.getDay() === 6) return true

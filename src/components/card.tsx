@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { Booking } from '../providers/app-state'
 import { fadeIn } from '../utils/keyframes'
-import { isWeekend, parseDate, parseDay, parseMonth } from '../utils/week'
+import { hasPassed, isToday, isWeekend, parseDate, parseDay, parseMonth } from '../utils/week'
 import Button from './button'
 import Modal from './modal'
 
@@ -20,10 +20,13 @@ interface Props extends Styled {
 const Container = styled.div<Styled>`
   display: flex;
   border-radius: .5rem;
-  padding: .5rem;
-  background-color: white;
+  padding: ${({ date }) => isToday(date) ? '.5rem 1rem' : '.5rem'};
+  background-color: ${({ date }) => hasPassed(date) ? 'rgba(255, 255, 255, 40%)' 
+    : isToday(date) ? 'white' 
+    : 'rgb(250, 250, 250)'};
   box-shadow: 0 .25rem .25rem rgba(0, 0, 0, 15%);
-  margin-top: 1rem;
+  margin-left: ${({ date }) => isToday(date) ? '-1rem' : '0'};
+  margin-right: ${({ date }) => isToday(date) ? '-1rem' : '0'};
   animation-name: ${fadeIn};
   -webkit-animation-name: ${fadeIn};
   animation-duration: .3s;
@@ -31,15 +34,25 @@ const Container = styled.div<Styled>`
   animation-timing-function: ease-in;
   -webkit-animation-timing-function: ease-in;
 
+  @media screen and (max-width: 500px) {
+    border-radius: ${({ date }) => isToday(date) ? '0' : '.5rem'};
+  }
+
+  @media screen and (min-width: 501px) {
+    margin-top: 1rem;
+  }
+
   & .date {
     display: flex;
     align-items: center;
-    font-size: 3rem;
-    line-height: 3rem;
+    font-size: ${({ date }) => isToday(date) ? '4rem' : '3rem'};
+    line-height: ${({ date }) => isToday(date) ? '4rem' : '3rem'};
     letter-spacing: -.25rem;
-    font-weight: 300;
+    font-weight: ${({ date }) => isToday(date) ? '400' : '300'};
     font-family: 'Roboto Condensed', sans-serif;
-    color: ${({ date }) => isWeekend(date) ? 'rgb(200, 80, 80)' : '#222'};
+    color: ${({ date }) => hasPassed(date) ? 'rgb(150, 150, 150)' 
+      : isWeekend(date) ? 'rgb(200, 80, 80)' 
+      : '#222'};
   }
 
   & .daymonth {
@@ -50,19 +63,24 @@ const Container = styled.div<Styled>`
     padding: 0 .5rem;
 
     .dayname {
-      font-size: 1.5rem;
+      font-size: ${({ date }) => isToday(date) ? '1.75rem' : '1.5rem'};
+      line-height: ${({ date }) => isToday(date) ? '1.75rem' : '1.5rem'};
       letter-spacing: -.05rem;
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 400;
-      color: ${({ date }) => isWeekend(date) ? 'rgb(200, 120, 120)' : '#555'};
-      line-height: 1.5rem;
+      color: ${({ date }) => hasPassed(date) ? 'rgb(180, 180, 180)' 
+        : isWeekend(date) ? 'rgb(200, 120, 120)' 
+        : '#555'};
       text-transform: capitalize;
     }
 
     .month {
-      font-size: .9rem;
+      font-size: ${({ date }) => isToday(date) ? '1.25rem' : '.9rem'};
+      line-height: ${({ date }) => isToday(date) ? '1.25rem' : '.9rem'};
       font-weight: 400;
-      color: ${({ date }) => isWeekend(date) ? 'rgb(200, 150, 150)' : '#888'};
+      color: ${({ date }) => hasPassed(date) ? 'rgb(190, 190, 190)' 
+        : isWeekend(date) ? 'rgb(200, 150, 150)' 
+        : '#888'};
       text-transform: uppercase;
       font-family: 'Roboto Condensed', sans-serif;
     }
@@ -127,7 +145,10 @@ export default function Card({ date, bookings }: Props) {
       </div>
 
       {(dBookings.length > 0 || pBookings.length > 0) && <div className='info' onClick={() => setModal(!modal)}>
-        <FontAwesomeIcon icon={faInfoCircle} />
+        <FontAwesomeIcon 
+          icon={faInfoCircle}
+          style={{ fontSize: isToday(date) ? '2rem' : '1.5rem' }}
+        />
       </div>}
 
       <div className='actions'>
@@ -144,8 +165,8 @@ export default function Card({ date, bookings }: Props) {
       <main>
         {dBookings.length > 0 && <div>
           <FontAwesomeIcon style={{ fontSize: '1.5rem' }} icon={faDisplay} />
-          {dBookings.map(({ displayName, photoURL }) =>
-            <UserDetails>
+          {dBookings.map(({ displayName, photoURL }, key) =>
+            <UserDetails key={key}>
               <img src={photoURL} alt={displayName} />
               <span>{displayName}</span>
             </UserDetails>)}
@@ -153,8 +174,8 @@ export default function Card({ date, bookings }: Props) {
 
         {pBookings.length > 0 && <div style={{ marginTop: '2rem' }}>
           <FontAwesomeIcon style={{ fontSize: '1.5rem' }} icon={faParking} />
-          {pBookings.map(({ displayName, photoURL }) =>
-            <UserDetails>
+          {pBookings.map(({ displayName, photoURL }, key) =>
+            <UserDetails key={key}>
               <img src={photoURL} alt={displayName} />
               <span>{displayName}</span>
             </UserDetails>)}

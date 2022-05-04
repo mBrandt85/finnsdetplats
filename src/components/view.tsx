@@ -12,13 +12,35 @@ import Navigate from './navigate'
 
 const Container = styled.div`
   margin: 0 auto;
-  padding: 1rem;
   width: 100%;
   max-width: 36rem;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media screen and (max-width: 500px) {
+    position: absolute;
+  }
+
+  & > main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+
+    > :first-child {
+      margin-top: 0;
+    }
+  }
 
   & > header {
     display: flex;
     justify-content: space-between;
+    align-items: end;
+    padding: 0 1rem 0 0;
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 400;
     font-size: 1.6rem;
@@ -31,17 +53,10 @@ const Container = styled.div`
     -webkit-animation-timing-function: ease-in;
 
     > span {
+      padding: 1rem 0 0 1rem;
       color: white;
       text-shadow: .1rem .1rem 0 rgba(0, 0, 0, 25%);
     }
-  }
-
-  & > :first-child {
-    margin-top: 0;
-  }
-
-  & > :last-child {
-    margin-top: 1rem;
   }
 `
 
@@ -65,7 +80,7 @@ const UserBadge = styled.div`
   & > .display-name {
     color: #444;
     font-size: 1.1rem;
-    padding: 0 1rem 0 .5rem;
+    padding: 0 .75rem 0 .5rem;
   }
 `
 
@@ -122,13 +137,15 @@ export default function View() {
         </UserBadge>
       </header>
 
-      {week.map(({ date }, idx) => 
-        <Card 
-          key={idx}
-          date={date} 
-          bookings={bookings.filter(booking => booking.date === date)}
-        />
-      )}
+      <main>
+        {week.map(({ date }, idx) => 
+          <Card 
+            key={idx}
+            date={date} 
+            bookings={bookings.filter(booking => booking.date === date)}
+          />
+        )}
+      </main>
 
       <Navigate />
     </Container>
