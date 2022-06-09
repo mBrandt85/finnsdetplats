@@ -1,4 +1,4 @@
-import { signOut } from 'firebase/auth'
+import { AuthError, signOut, Unsubscribe } from 'firebase/auth'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -88,6 +88,7 @@ export default function View() {
   const { user, week, bookings, addBooking, removeBooking } = useAppState()
   const [loading, setLoading] = useState<boolean>(true)
   const [clicks, setClicks] = useState<number>(0)
+  let workouts = []
 
   const logout = async () => await signOut(auth)
 
@@ -97,30 +98,35 @@ export default function View() {
   }, [clicks])
 
   useEffect(() => {
+    let unsub: Unsubscribe
     setLoading(true)
-    const unsubscribe = onSnapshot(
-      query(
-        collection(firestore, 'bookings'), 
-        where('date', '>=', week[0].date),
-        where('date', '<=', week[6].date)
-      ),
-      snapshot => {
-        snapshot.docChanges().forEach(change => {
-          if (change.type === 'added') {
-            addBooking({
-              id: change.doc.id,
-              ...change.doc.data() as Booking
-            })
-          }
+    try {
+      unsub = onSnapshot(
+        query(
+          collection(firestore, 'bookings'), 
+          where('date', '>=', week[0].date),
+          where('date', '<=', week[6].date)
+        ),
+        snapshot => {
+          snapshot.docChanges().forEach(change => {
+            if (change.type === 'added') {
+              addBooking({
+                id: change.doc.id,
+                ...change.doc.data() as Booking
+              })
+            }
+  
+            if (change.type === 'removed')
+              removeBooking(change.doc.id)
+          })
+          setLoading(false)
+        }
+      )
+    } catch (e) {
+      const error = e as AuthError
+    }
 
-          if (change.type === 'removed')
-            removeBooking(change.doc.id)
-        })
-        setLoading(false)
-      }
-    )
-
-    return () => unsubscribe()
+    return () => unsub && unsub()
   // eslint-disable-next-line
   }, [week])
 

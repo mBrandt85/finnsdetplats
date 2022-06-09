@@ -59,8 +59,10 @@ export default function Button({ type, date, bookings }: Props) {
   const [button, setButton] = useState<'passed' | 'free' | 'full' | 'check'>('free')
   const booked = bookings.filter(booking => booking.date === date && booking.type === type)
   const personal = booked.filter(booking => booking.uid === uid)
-  const quantity = type === 'd' ? 8 : 3
-
+  const quantity = type === 'd' 
+    ? !(date <= '2022-06-12' || date >= '2022-07-06') ? 5 : 8
+    : 3
+    
   const handleAdd = async () => {
     setLoading(true)
     await addDoc(collection(firestore, 'bookings'), {
