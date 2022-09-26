@@ -58,7 +58,7 @@ export function isWeekend(d: string): boolean {
 
 export function parseFullDate(date: Date): string {
   const yyyy = date.getFullYear()
-  const mm = (date.getMonth() < 10 ? '0' : '') + (Number(date.getMonth()) + 1)
+  const mm = (date.getMonth() < 9 ? '0' : '') + (Number(date.getMonth()) + 1)
   const dd = (date.getDate() < 10 ? '0' : '') + date.getDate()
   return `${yyyy}-${mm}-${dd}`
 }
