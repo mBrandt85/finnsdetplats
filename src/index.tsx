@@ -1,6 +1,6 @@
 import { StrictMode, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { GoogleAuthProvider, onAuthStateChanged, signInWithRedirect } from 'firebase/auth'
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth'
 
 import './index.css'
 import Providers from './providers'
@@ -20,15 +20,30 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true)
 
   const specialForces = [
+    'magnusbrandt85@gmail.com',
     'sebastianberglonn@gmail.com',
-    'en.ahmadmarei@gmail.com'
+    'en.ahmadmarei@gmail.com',
+    'mattias.pedersen89@gmail.com'
   ]
 
-  const login = async () => {
+  const login = () => {
     const provider = new GoogleAuthProvider()
     provider.addScope('profile')
     provider.addScope('email')
-    await signInWithRedirect(auth, provider)
+    signInWithPopup(auth, provider).then(result => {
+      //const credential = GoogleAuthProvider.credentialFromResult(result)
+      //const token = credential ? credential.accessToken : null
+      //const user = result.user
+      setUser(result.user)
+      setWeek(getWeek())
+      setLoading(false)
+    }).catch((error) => {
+      const errorCode = error.code
+      const errorMessage = error.message
+      const email = error.customData.email
+      const credential = GoogleAuthProvider.credentialFromError(error)
+      console.log(errorCode, errorMessage, email, credential)
+    })
   }
 
   useEffect(() => {
@@ -46,7 +61,7 @@ function App() {
   // eslint-disable-next-line
   }, [])
 
-  if (loading) return <Loading text="kollar att du är ok..." />
+  if (loading) return <Loading text="kollar att du är ok... om inget händer kolla så du inte blockat nått popup!" />
 
   return (
     user!.email!.includes('@cygni.se')

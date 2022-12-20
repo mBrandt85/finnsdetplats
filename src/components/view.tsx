@@ -9,6 +9,7 @@ import { fadeIn } from '../utils/keyframes'
 import Card from './card'
 import Loading from './loading'
 import Navigate from './navigate'
+import NotOk from './not-ok'
 
 const Container = styled.div`
   margin: 0 auto;
@@ -85,12 +86,15 @@ const UserBadge = styled.div`
 `
 
 export default function View() {
-  const { user, week, bookings, addBooking, removeBooking } = useAppState()
+  const { user, clearUser, week, bookings, addBooking, removeBooking } = useAppState()
   const [loading, setLoading] = useState<boolean>(true)
   const [clicks, setClicks] = useState<number>(0)
   let workouts = []
 
-  const logout = async () => await signOut(auth)
+  const logout = async () => {
+    await signOut(auth)
+    clearUser()
+  }
 
   useEffect(() => {
     if (clicks === 10) logout()
@@ -131,6 +135,8 @@ export default function View() {
   }, [week])
 
   if (loading) return <Loading text='hämtar bokningar...' />
+
+  if (!user) return <NotOk />
   
   return (
     <Container>

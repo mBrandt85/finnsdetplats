@@ -7,8 +7,10 @@ service cloud.firestore {
         && (
         	request.auth.token.email.matches('.*@cygni[.]se')
           || request.auth.token.email in [
+          	'magnusbrandt85@gmail.com',
             'sebastianberglonn@gmail.com',
-            'en.ahmadmarei@gmail.com'
+            'en.ahmadmarei@gmail.com',
+            'mattias.pedersen89@gmail.com'
           ]
         );
     }
