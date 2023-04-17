@@ -1,11 +1,7 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
-import AppStateProvider from './app-state'
+import AppStateProvider from './app-state';
 
 export default function Providers({ children }: { children: ReactNode }) {
-  return (
-    <AppStateProvider>
-      {children}
-    </AppStateProvider>
-  )
+  return <AppStateProvider>{children}</AppStateProvider>;
 }

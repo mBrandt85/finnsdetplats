@@ -1,10 +1,10 @@
-import { faHand } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { signOut } from 'firebase/auth'
-import styled from 'styled-components'
+import { faHand } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { signOut } from 'firebase/auth';
+import styled from 'styled-components';
 
-import { auth } from '../firebase'
-import { useAppState } from '../providers/app-state'
+import { auth } from '../firebase';
+import { useAppState } from '../providers/app-state';
 
 const Container = styled.div`
   position: fixed;
@@ -16,12 +16,12 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-`
+`;
 
 const Icon = styled.span`
   font-size: 10rem;
   color: rgb(6, 155, 229);
-`
+`;
 
 const User = styled.div`
   display: flex;
@@ -33,9 +33,8 @@ const User = styled.div`
   text-align: center;
 
   & > span:first-child {
-
   }
-`
+`;
 
 const Text = styled.div`
   padding: 1rem;
@@ -43,20 +42,20 @@ const Text = styled.div`
   font-size: 2em;
   color: rgb(6, 155, 229);
   text-align: center;
-`
+`;
 
 const SignOut = styled.button`
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   padding: 1rem 2rem;
   background-color: white;
-  box-shadow: 0 .25rem .25rem rgba(0, 0, 0, 15%);
+  box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
   margin-top: 1rem;
   border: none;
   font-size: 1rem;
-`
+`;
 
 export default function NotOk() {
-  const { user } = useAppState()
+  const { user } = useAppState();
 
   return (
     <Container>
@@ -75,9 +74,7 @@ export default function NotOk() {
         Använd din Cygni Mail
       </Text>
 
-      <SignOut onClick={async () => await signOut(auth)}>
-        Logga ut och försök igen...
-      </SignOut>
+      <SignOut onClick={async () => await signOut(auth)}>Logga ut och försök igen...</SignOut>
     </Container>
-  )
+  );
 }

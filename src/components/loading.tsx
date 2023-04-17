@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-import { fadeInOut } from '../utils/keyframes'
+import { fadeInOut } from '../utils/keyframes';
 
 const Container = styled.div`
   position: fixed;
@@ -11,14 +11,14 @@ const Container = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-`
+`;
 
 const Text = styled.span`
   font-size: 1.25rem;
   font-weight: 700;
   color: rgb(6, 155, 229);
   text-transform: uppercase;
-  letter-spacing: .05rem;
+  letter-spacing: 0.05rem;
   animation-name: ${fadeInOut};
   -webkit-animation-name: ${fadeInOut};
   animation-duration: 1s;
@@ -27,14 +27,12 @@ const Text = styled.span`
   -webkit-animation-timing-function: ease-in;
   animation-iteration-count: infinite;
   -webkit-animation-iteration-count: infinite;
-`
+`;
 
-export default function Loading({ text = 'LOADING' }: { text?: string}) {
+export default function Loading({ text = 'LOADING' }: { text?: string }) {
   return (
     <Container>
-      <Text>
-        {text}
-      </Text>
+      <Text>{text}</Text>
     </Container>
-  )
+  );
 }
