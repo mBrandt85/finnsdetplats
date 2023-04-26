@@ -1,7 +1,7 @@
 import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faParking, fa1, fa2 } from '@fortawesome/free-solid-svg-icons';
+import { faParking, faCoffee, faMoon } from '@fortawesome/free-solid-svg-icons';
 
 import { Booking, useAppState } from '../providers/app-state';
 import { firestore } from '../firebase';
@@ -24,11 +24,16 @@ const Container = styled.div<Styled>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
   width: 4rem;
   height: 100%;
   border-radius: 0.5rem;
   background-color: ${({ button }) =>
-    button === 'check' ? 'rgb(230, 250, 255)' : button === 'free' ? 'rgb(200, 250, 200)' : 'none'};
+    button === 'check'
+      ? 'rgb(230, 250, 255)'
+      : button === 'free'
+      ? 'rgb(200, 250, 200)'
+      : 'none'};
   color: ${({ button }) =>
     button === 'passed'
       ? 'rgb(150, 150, 150)'
@@ -48,7 +53,11 @@ const Container = styled.div<Styled>`
 
 const ContainerP = styled(Container)`
   background-color: ${({ button }) =>
-    button === 'check' ? 'rgb(230, 250, 255)' : button === 'free' ? 'rgb(200, 200, 250)' : 'none'};
+    button === 'check'
+      ? 'rgb(230, 250, 255)'
+      : button === 'free'
+      ? 'rgb(200, 200, 250)'
+      : 'none'};
   color: ${({ button }) =>
     button === 'passed'
       ? 'rgb(150, 150, 150)'
@@ -80,10 +89,19 @@ export default function Button({ type, date, bookings, partOfDay }: Props) {
   const { user } = useAppState();
   const { uid, displayName, photoURL } = user!;
   const [loading, setLoading] = useState<boolean>(false);
-  const [button, setButton] = useState<'passed' | 'free' | 'full' | 'check'>('free');
-  const booked = bookings.filter((booking) => booking.date === date && booking.type === type);
+  const [button, setButton] = useState<'passed' | 'free' | 'full' | 'check'>(
+    'free'
+  );
+  const booked = bookings.filter(
+    (booking) => booking.date === date && booking.type === type
+  );
   const personal = booked.filter((booking) => booking.uid === uid);
-  const quantity = type === 'd' ? (!(date <= '2022-06-12' || date >= '2022-07-06') ? 5 : 8) : 3;
+  const quantity =
+    type === 'd'
+      ? !(date <= '2022-06-12' || date >= '2022-07-06')
+        ? 5
+        : 8
+      : 3;
 
   const handleAdd = async () => {
     setLoading(true);
@@ -120,21 +138,33 @@ export default function Button({ type, date, bookings, partOfDay }: Props) {
   const onClick = () => {
     if (loading) return;
     if (button === 'check' && !hasPassed(date)) handleDelete();
-    if (button !== 'check' && button === 'free' && !hasPassed(date)) handleAdd();
+    if (button !== 'check' && button === 'free' && !hasPassed(date))
+      handleAdd();
   };
 
   if (type === 'p')
     return (
       <ContainerP button={button} onClick={onClick}>
-        <FontAwesomeIcon icon={faParking} style={{ fontSize: isToday(date) ? '1.25rem' : '1rem' }} />
-        <Text date={date}>{loading ? '...' : `${bookings.length} / ${quantity}`}</Text>
+        <FontAwesomeIcon
+          icon={faParking}
+          style={{ fontSize: isToday(date) ? '1.25rem' : '1rem' }}
+        />
+        <Text date={date}>
+          {loading ? '...' : `${bookings.length} / ${quantity}`}
+        </Text>
       </ContainerP>
     );
 
   return (
     <Container button={button} onClick={onClick}>
-      <FontAwesomeIcon icon={partOfDay === 1 ? fa1 : fa2} style={{ fontSize: isToday(date) ? '1.25rem' : '1rem' }} />
-      <Text date={date}>{loading ? '...' : `${bookings.length} / ${quantity}`}</Text>
+      {/* <FontAwesomeIcon
+        icon={partOfDay === 1 ? faCoffee : faMoon}
+        style={{ fontSize: isToday(date) ? '1.25rem' : '1rem' }}
+      /> */}
+      {partOfDay === 1 ? 'AM' : 'PM'}
+      <Text date={date}>
+        {loading ? '...' : `${bookings.length} / ${quantity}`}
+      </Text>
     </Container>
   );
 }
