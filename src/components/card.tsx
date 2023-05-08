@@ -4,6 +4,7 @@ import {
   faDisplay,
   faInfoCircle,
   faParking,
+  faLeftLong,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
@@ -30,10 +31,76 @@ interface Props extends Styled {
   bookings: Booking[];
 }
 
+const Wrapper = styled.div<Styled>`
+  opacity: ${({ date }) => (hasPassed(date) ? '0.5' : '1')};
+
+  /* transform: ${({ date }) => (isToday(date) ? 'scale(1.1)' : '')}; */
+`;
+
+const DateTitle = styled.div<Styled>`
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto Condensed', sans-serif;
+  gap: 0.2rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #555;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+  min-width: 6rem;
+  margin-right: 2rem;
+
+  @media screen and (max-width: 500px) {
+    margin-right: 0;
+  }
+
+  &:hover {
+    background-color: #d9d9d9;
+    cursor: pointer;
+  }
+
+  & .dayname {
+    color: black;
+    font-size: 1.2rem;
+  }
+
+  & .bottom-row {
+    display: flex;
+    gap: 0.1rem;
+  }
+
+  .today-arrow {
+    color: rgba(200, 0, 0);
+    transform: translateX(5rem);
+    animation: bounce 1.5s infinite;
+    animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    animation-name: bounce;
+    transform: translateX(0.1rem);
+  }
+
+  @keyframes bounce {
+    0% {
+      transform: translateX(0.1rem);
+    }
+    80% {
+      transform: translateX(0.5rem);
+    }
+    100% {
+      transform: translateX(0.1rem);
+    }
+  }
+`;
+
 const Container = styled.div<Styled>`
   display: flex;
-  border-radius: 0.5rem;
-  padding: ${({ date }) => (isToday(date) ? '.5rem 1rem' : '.5rem')};
+  justify-content: end;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 1rem;
+  /* justify-content: space-between; */
+  /* padding: ${({ date }) => (isToday(date) ? '.5rem 1rem' : '.5rem')}; */
+  padding: 0.5rem;
   background-color: ${({ date }) =>
     hasPassed(date)
       ? 'rgba(255, 255, 255, 40%)'
@@ -41,8 +108,8 @@ const Container = styled.div<Styled>`
       ? 'white'
       : 'rgb(250, 250, 250)'};
   box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
-  margin-left: ${({ date }) => (isToday(date) ? '-1rem' : '0')};
-  margin-right: ${({ date }) => (isToday(date) ? '-1rem' : '0')};
+  /* margin-left: ${({ date }) => (isToday(date) ? '-1rem' : '0')}; */
+  /* margin-right: ${({ date }) => (isToday(date) ? '-1rem' : '0')}; */
   animation-name: ${fadeIn};
   -webkit-animation-name: ${fadeIn};
   animation-duration: 0.3s;
@@ -51,84 +118,58 @@ const Container = styled.div<Styled>`
   -webkit-animation-timing-function: ease-in;
 
   @media screen and (max-width: 500px) {
+    width: 100vw;
+    border-radius: 0;
+  }
+
+  /* @media screen and (max-width: 500px) {
     border-radius: ${({ date }) => (isToday(date) ? '0' : '.5rem')};
-  }
+  } */
 
-  @media screen and (min-width: 501px) {
+  /* @media screen and (min-width: 501px) {
     margin-top: 1rem;
-  }
-
-  & .date {
-    display: flex;
-    align-items: center;
-    font-size: ${({ date }) => (isToday(date) ? '4rem' : '3rem')};
-    line-height: ${({ date }) => (isToday(date) ? '4rem' : '3rem')};
-    letter-spacing: -0.25rem;
-    font-weight: ${({ date }) => (isToday(date) ? '400' : '300')};
-    font-family: 'Roboto Condensed', sans-serif;
-    color: ${({ date }) =>
-      hasPassed(date)
-        ? 'rgb(150, 150, 150)'
-        : isWeekend(date)
-        ? 'rgb(200, 80, 80)'
-        : '#222'};
-  }
-
-  & .daymonth {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 0.5rem;
-
-    .dayname {
-      font-size: ${({ date }) => (isToday(date) ? '1.5rem' : '1.25rem')};
-      line-height: ${({ date }) => (isToday(date) ? '1.75rem' : '1.5rem')};
-      letter-spacing: -0.05rem;
-      font-family: 'Roboto Condensed', sans-serif;
-      font-weight: 400;
-      color: ${({ date }) =>
-        hasPassed(date)
-          ? 'rgb(180, 180, 180)'
-          : isWeekend(date)
-          ? 'rgb(200, 120, 120)'
-          : '#555'};
-      text-transform: uppercase;
-
-      :first-letter {
-        font-size: ${({ date }) => (isToday(date) ? '2.25rem' : '1.75rem')};
-      }
-    }
-
-    .month {
-      font-size: ${({ date }) => (isToday(date) ? '1.25rem' : '.9rem')};
-      line-height: ${({ date }) => (isToday(date) ? '1.25rem' : '.9rem')};
-      font-weight: 400;
-      color: ${({ date }) =>
-        hasPassed(date)
-          ? 'rgb(190, 190, 190)'
-          : isWeekend(date)
-          ? 'rgb(200, 150, 150)'
-          : '#888'};
-      text-transform: uppercase;
-      font-family: 'Roboto Condensed', sans-serif;
-    }
-  }
-
-  & .info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 0.5rem;
-    margin-right: 0.5rem;
-    font-size: 1.25rem;
-    color: rgb(6, 155, 229);
-    cursor: pointer;
-  }
+  } */
 
   & .actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
+    & .left {
+      display: flex;
+    }
+
+    & .action-pair {
+      position: relative;
+      display: flex;
+      gap: 0.2rem;
+
+      & > div:nth-child(1) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      & > div:nth-child(2) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+    & .action-pair.labeled {
+      &:before {
+        content: 'Kontorsplats';
+        background-color: white;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        padding: 0 0.5rem;
+        position: absolute;
+        top: 0;
+        color: #111;
+        font-weight: 500;
+        font-size: 0.8rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(-130%);
+      }
+      &.p:before {
+        content: 'Parkering';
+      }
+    }
   }
 `;
 
@@ -166,41 +207,61 @@ export default function Card({ date, bookings }: Props) {
   );
   const dBookingsPart2 = dBookings.filter(({ partOfDay }) => partOfDay === 2);
   const pBookings = bookings.filter(({ type }) => type === 'p');
+  const pBookingsPart1 = pBookings.filter(
+    ({ partOfDay }) => partOfDay === undefined || partOfDay === 1
+  );
+  const pBookingsPart2 = pBookings.filter(({ partOfDay }) => partOfDay === 2);
 
   return (
     <>
+      {/* <Wrapper date={date}> */}
       <Container date={date}>
-        <div className='date'>{parseDate(date)}</div>
-
-        <div className='daymonth'>
-          <div className='dayname'>{parseDay(date)}</div>
-
-          <div className='month'>{parseMonth(date)}</div>
-        </div>
-
-        {(dBookings.length > 0 || pBookings.length > 0) && (
-          <div className='info' onClick={() => setModal(!modal)}>
-            <FontAwesomeIcon
-              icon={faInfoCircle}
-              style={{ fontSize: isToday(date) ? '2rem' : '1.5rem' }}
-            />
+        <DateTitle date={date} onClick={() => setModal(!modal)}>
+          <span className='dayname'>{parseDay(date)}</span>
+          <div className='bottom-row'>
+            <span className='date'>{parseDate(date)}</span>
+            <span className='month'>{parseMonth(date)}</span>
+            {isToday(date) && (
+              <div className='today-arrow right'>
+                <FontAwesomeIcon icon={faLeftLong} />
+              </div>
+            )}
           </div>
-        )}
+        </DateTitle>
 
         <div className='actions'>
-          <Button
-            type='d'
-            date={date}
-            partOfDay={1}
-            bookings={dBookingsPart1}
-          />
-          <Button
-            type='d'
-            date={date}
-            partOfDay={2}
-            bookings={dBookingsPart2}
-          />
-          <Button type='p' date={date} bookings={pBookings} />
+          <div
+            className={`action-pair ${isToday(date) ? 'labeled' : 'labeled'}`}
+          >
+            <Button
+              type='d'
+              date={date}
+              partOfDay={1}
+              bookings={dBookingsPart1}
+            />
+            <Button
+              type='d'
+              date={date}
+              partOfDay={2}
+              bookings={dBookingsPart2}
+            />
+          </div>
+          <div
+            className={`action-pair p ${isToday(date) ? 'labeled' : 'labeled'}`}
+          >
+            <Button
+              type='p'
+              date={date}
+              partOfDay={1}
+              bookings={pBookingsPart1}
+            />
+            <Button
+              type='p'
+              date={date}
+              partOfDay={2}
+              bookings={pBookingsPart2}
+            />
+          </div>
         </div>
       </Container>
 
@@ -248,6 +309,7 @@ export default function Card({ date, bookings }: Props) {
           </Main>
         </Modal>
       )}
+      {/* // </Wrapper> */}
     </>
   );
 }

@@ -14,26 +14,33 @@ import NotOk from './not-ok';
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  max-width: 36rem;
+  /* max-width: 36rem; */
+  width: min-content;
   height: 100%;
-  overflow: auto;
+  /* overflow: auto; */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 
   @media screen and (max-width: 500px) {
-    position: absolute;
+    /* position: absolute; */
   }
 
   & > main {
-    flex-grow: 1;
+    /* flex-grow: 1; */
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
+    /* justify-content: space-between; */
+    /* padding: 1rem; */
+    gap: 1.5rem;
 
     > :first-child {
-      margin-top: 0;
+      margin-top: 2rem;
+    }
+
+    @media screen and (max-width: 500px) {
+      /* gap: 0.5rem; */
     }
   }
 
@@ -64,10 +71,10 @@ const Container = styled.div`
 const UserBadge = styled.div`
   display: flex;
   align-items: center;
-  height: 2rem;
+  padding: 2px 0;
   font-size: 1.25rem;
   background-color: white;
-  border-radius: 0.875rem;
+  border-radius: 9999999px;
   box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
 
   & > img {
@@ -86,7 +93,8 @@ const UserBadge = styled.div`
 `;
 
 export default function View() {
-  const { user, clearUser, week, bookings, addBooking, removeBooking } = useAppState();
+  const { user, clearUser, week, bookings, addBooking, removeBooking } =
+    useAppState();
   const [loading, setLoading] = useState<boolean>(true);
   const [clicks, setClicks] = useState<number>(0);
   let workouts = [];
@@ -106,7 +114,11 @@ export default function View() {
     setLoading(true);
     try {
       unsub = onSnapshot(
-        query(collection(firestore, 'bookings'), where('date', '>=', week[0].date), where('date', '<=', week[6].date)),
+        query(
+          collection(firestore, 'bookings'),
+          where('date', '>=', week[0].date),
+          where('date', '<=', week[6].date)
+        ),
         (snapshot) => {
           snapshot.docChanges().forEach((change) => {
             if (change.type === 'added') {
@@ -146,7 +158,11 @@ export default function View() {
 
       <main>
         {week.map(({ date }, idx) => (
-          <Card key={idx} date={date} bookings={bookings.filter((booking) => booking.date === date)} />
+          <Card
+            key={idx}
+            date={date}
+            bookings={bookings.filter((booking) => booking.date === date)}
+          />
         ))}
       </main>
 

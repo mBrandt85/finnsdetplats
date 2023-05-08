@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from 'firebase/auth';
+import {
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithPopup,
+} from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
 import Loading from './components/loading';
@@ -63,9 +67,17 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
-  if (loading) return <Loading text='kollar att du är ok... om inget händer kolla så du inte blockat nått popup!' />;
+  if (loading)
+    return (
+      <Loading text='kollar att du är ok... om inget händer kolla så du inte blockat nått popup!' />
+    );
 
-  return user!.email!.includes('@cygni.se') || specialForces.includes(user!.email!) ? <View /> : <NotOk />;
+  return user!.email!.includes('@cygni.se') ||
+    specialForces.includes(user!.email!) ? (
+    <View />
+  ) : (
+    <NotOk />
+  );
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

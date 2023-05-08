@@ -21,59 +21,48 @@ interface Props {
 
 const Container = styled.div<Styled>`
   display: flex;
+  padding: 0.4rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
-  width: 4rem;
+  width: 3rem;
   height: 100%;
   border-radius: 0.5rem;
-  background-color: ${({ button }) =>
+  background-color: #049be5;
+  font-size: 0.8rem;
+
+  color: white;
+  /* box-shadow: ${({ button }) =>
     button === 'check'
-      ? 'rgb(230, 250, 255)'
+      ? '0 .1rem .1rem rgba(255, 255, 255, 20%) inset'
       : button === 'free'
-      ? 'rgb(200, 250, 200)'
-      : 'none'};
-  color: ${({ button }) =>
-    button === 'passed'
-      ? 'rgb(150, 150, 150)'
-      : button === 'check'
-      ? 'rgb(6, 155, 229)'
-      : button === 'free'
-      ? 'rgb(40, 100, 40)'
-      : 'rgb(130, 0, 0)'};
-  box-shadow: ${({ button }) =>
-    button === 'check'
-      ? '0 .1rem .1rem rgba(0, 0, 0, 20%) inset'
-      : button === 'free'
-      ? '0 .1rem .1rem rgba(0, 0, 0, 20%)'
-      : 'none'};
+      ? '0 .1rem .1rem rgba(0, 0, 0, 100%)'
+      : 'none'}; */
   cursor: ${({ button }) => (button === 'full' ? 'not-allowed' : 'pointer')};
+
+  &.check {
+    background-color: #025f8d;
+  }
+  &.full {
+    background-color: #d9d9d9;
+    color: #9f9f9f;
+    box-shadow: none;
+  }
 `;
 
 const ContainerP = styled(Container)`
-  background-color: ${({ button }) =>
-    button === 'check'
-      ? 'rgb(230, 250, 255)'
-      : button === 'free'
-      ? 'rgb(200, 200, 250)'
-      : 'none'};
-  color: ${({ button }) =>
-    button === 'passed'
-      ? 'rgb(150, 150, 150)'
-      : button === 'check'
-      ? 'rgb(6, 155, 229)'
-      : button === 'free'
-      ? 'rgb(40, 40, 100)'
-      : 'rgb(130, 0, 0)'};
+  color: white;
 `;
 
 const Text = styled.span<{ date: string; trigger?: boolean }>`
   margin-top: 0.25rem;
-  font-size: ${({ date }) => (isToday(date) ? '1rem' : '.8rem')};
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -0.05rem;
+`;
+
+const ButtonLabel = styled.span`
+  font-weight: 500;
 `;
 
 interface Doc {
@@ -144,26 +133,32 @@ export default function Button({ type, date, bookings, partOfDay }: Props) {
 
   if (type === 'p')
     return (
-      <ContainerP button={button} onClick={onClick}>
-        <FontAwesomeIcon
-          icon={faParking}
-          style={{ fontSize: isToday(date) ? '1.25rem' : '1rem' }}
-        />
+      <ContainerP className={button} button={button} onClick={onClick}>
+        <ButtonLabel>{partOfDay === 1 ? 'FM' : 'EM'}</ButtonLabel>
+
         <Text date={date}>
-          {loading ? '...' : `${bookings.length} / ${quantity}`}
+          {loading ? (
+            '...'
+          ) : (
+            <span>
+              {bookings.length}&nbsp;/&nbsp;{quantity}
+            </span>
+          )}
         </Text>
       </ContainerP>
     );
 
   return (
-    <Container button={button} onClick={onClick}>
-      {/* <FontAwesomeIcon
-        icon={partOfDay === 1 ? faCoffee : faMoon}
-        style={{ fontSize: isToday(date) ? '1.25rem' : '1rem' }}
-      /> */}
-      {partOfDay === 1 ? 'AM' : 'PM'}
+    <Container className={button} button={button} onClick={onClick}>
+      <ButtonLabel>{partOfDay === 1 ? 'FM' : 'EM'}</ButtonLabel>
       <Text date={date}>
-        {loading ? '...' : `${bookings.length} / ${quantity}`}
+        {loading ? (
+          '...'
+        ) : (
+          <span>
+            {bookings.length}&nbsp;/&nbsp;{quantity}
+          </span>
+        )}
       </Text>
     </Container>
   );
