@@ -8,7 +8,6 @@ import { fadeIn } from '../utils/keyframes';
 import {
   hasPassed,
   isToday,
-  isWeekend,
   parseDate,
   parseDay,
   parseMonth,
