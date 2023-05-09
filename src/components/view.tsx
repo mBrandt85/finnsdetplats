@@ -1,4 +1,4 @@
-import { AuthError, signOut, Unsubscribe } from 'firebase/auth';
+import { signOut, Unsubscribe } from 'firebase/auth';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -97,7 +97,6 @@ export default function View() {
     useAppState();
   const [loading, setLoading] = useState<boolean>(true);
   const [clicks, setClicks] = useState<number>(0);
-  let workouts = [];
 
   const logout = async () => {
     await signOut(auth);
@@ -133,9 +132,7 @@ export default function View() {
           setLoading(false);
         }
       );
-    } catch (e) {
-      const error = e as AuthError;
-    }
+    } catch (e) {}
 
     return () => unsub && unsub();
     // eslint-disable-next-line

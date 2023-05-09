@@ -1,4 +1,5 @@
 node_modules
 build
+dist
 .firebase
 .DS_Store
