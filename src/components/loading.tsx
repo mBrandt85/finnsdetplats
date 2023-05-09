@@ -16,7 +16,7 @@ const Container = styled.div`
 const Text = styled.span`
   font-size: 1.25rem;
   font-weight: 700;
-  color: rgb(6, 155, 229);
+  color: white;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
   animation-name: ${fadeInOut};

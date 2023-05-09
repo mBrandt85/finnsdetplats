@@ -27,20 +27,27 @@ const Container = styled.div`
   }
 
   & > main {
-    /* flex-grow: 1; */
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
-    /* padding: 1rem; */
     gap: 1.5rem;
 
     > :first-child {
       margin-top: 2rem;
     }
 
+    .seperator {
+      margin: 0 auto;
+      margin-bottom: 0.5rem;
+      width: 40px;
+      height: 5px;
+      border-radius: 999999px;
+      background-color: black;
+      opacity: 0.2;
+    }
+
     @media screen and (max-width: 500px) {
-      /* gap: 0.5rem; */
+      padding-bottom: 5rem;
     }
   }
 
@@ -154,13 +161,18 @@ export default function View() {
       </header>
 
       <main>
-        {week.map(({ date }, idx) => (
-          <Card
-            key={idx}
-            date={date}
-            bookings={bookings.filter((booking) => booking.date === date)}
-          />
-        ))}
+        {week.map(({ date }, idx) => {
+          return (
+            <>
+              <Card
+                key={idx}
+                date={date}
+                bookings={bookings.filter((booking) => booking.date === date)}
+              />
+              {idx === 4 && <div className='seperator'></div>}
+            </>
+          );
+        })}
       </main>
 
       <Navigate />

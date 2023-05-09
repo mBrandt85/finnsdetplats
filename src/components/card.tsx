@@ -97,7 +97,7 @@ const Container = styled.div<Styled>`
   -webkit-animation-duration: 0.3s;
   animation-timing-function: ease-in;
   -webkit-animation-timing-function: ease-in;
-  background-color: ${({ date }) => (isWeekend(date) ? '#ccc' : '#fff')};
+  background-color: white;
 
   @media screen and (max-width: 500px) {
     width: 100vw;
@@ -128,7 +128,7 @@ const Container = styled.div<Styled>`
     & .action-pair.labeled {
       &:before {
         content: 'Kontorsplats';
-        background-color: ${({ date }) => (isWeekend(date) ? '#ccc' : '#fff')};
+        background-color: white;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
         padding: 0 0.5rem;

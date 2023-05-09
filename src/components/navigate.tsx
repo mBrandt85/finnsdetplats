@@ -1,4 +1,8 @@
-import { faAngleLeft, faAngleRight, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleLeft,
+  faAngleRight,
+  faCalendarDay,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -18,6 +22,11 @@ const Container = styled.div`
   animation-timing-function: ease-in;
   -webkit-animation-timing-function: ease-in;
 
+  @media screen and (max-width: 500px) {
+    position: fixed;
+    bottom: 0;
+  }
+
   @media screen and (min-width: 501px) {
     padding: 0 1rem 1rem 1rem;
   }
@@ -29,14 +38,16 @@ const Button = styled.span<{ next?: boolean; home?: boolean }>`
   justify-content: center;
   width: 3rem;
   height: 3rem;
-  border-radius: ${({ next, home }) => (next ? '.5rem 50% 50% .5rem' : home ? '.5rem' : '50% .5rem .5rem 50%')};
+  border-radius: ${({ next, home }) =>
+    next ? '.5rem 50% 50% .5rem' : home ? '.5rem' : '50% .5rem .5rem 50%'};
   background-color: rgb(6, 155, 229);
   font-size: 1.25rem;
   color: white;
   cursor: pointer;
 
   @media screen and (max-width: 500px) {
-    border-radius: ${({ next, home }) => (next ? '1rem 0 0 0' : home ? '1rem 1rem 0 0' : '0 1rem 0 0')};
+    border-radius: ${({ next, home }) =>
+      next ? '1rem 0 0 0' : home ? '1rem 1rem 0 0' : '0 1rem 0 0'};
     box-shadow: 0 0 0.25rem rgba(0, 0, 0, 25%);
   }
 
@@ -55,7 +66,8 @@ export default function Navigate() {
 
   useEffect(() => {
     const currentDate = parseFullDate(new Date());
-    if (week.filter(({ date }) => date === currentDate).length > 0) setShow(false);
+    if (week.filter(({ date }) => date === currentDate).length > 0)
+      setShow(false);
     else setShow(true);
   }, [week]);
 
