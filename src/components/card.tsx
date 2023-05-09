@@ -1,11 +1,4 @@
-import {
-  fa1,
-  fa2,
-  faDisplay,
-  faInfoCircle,
-  faParking,
-  faLeftLong,
-} from '@fortawesome/free-solid-svg-icons';
+import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -32,9 +25,7 @@ interface Props extends Styled {
 }
 
 const Wrapper = styled.div<Styled>`
-  opacity: ${({ date }) => (hasPassed(date) ? '0.5' : '1')};
-
-  /* transform: ${({ date }) => (isToday(date) ? 'scale(1.1)' : '')}; */
+  opacity: ${({ date }) => (hasPassed(date) ? '0.4' : '1')};
 `;
 
 const DateTitle = styled.div<Styled>`
@@ -93,18 +84,12 @@ const DateTitle = styled.div<Styled>`
 
 const Container = styled.div<Styled>`
   display: flex;
-  justify-content: end;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
-  background-color: ${({ date }) =>
-    hasPassed(date)
-      ? 'rgba(255, 255, 255, 40%)'
-      : isToday(date)
-      ? 'white'
-      : 'rgb(250, 250, 250)'};
+  background-color: white;
   box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
   animation-name: ${fadeIn};
   -webkit-animation-name: ${fadeIn};
@@ -112,6 +97,7 @@ const Container = styled.div<Styled>`
   -webkit-animation-duration: 0.3s;
   animation-timing-function: ease-in;
   -webkit-animation-timing-function: ease-in;
+  background-color: ${({ date }) => (isWeekend(date) ? '#ccc' : '#fff')};
 
   @media screen and (max-width: 500px) {
     width: 100vw;
@@ -142,7 +128,7 @@ const Container = styled.div<Styled>`
     & .action-pair.labeled {
       &:before {
         content: 'Kontorsplats';
-        background-color: white;
+        background-color: ${({ date }) => (isWeekend(date) ? '#ccc' : '#fff')};
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
         padding: 0 0.5rem;
@@ -210,124 +196,125 @@ export default function Card({ date, bookings }: Props) {
 
   return (
     <>
-      {/* <Wrapper date={date}> */}
-      <Container date={date}>
-        <DateTitle date={date} onClick={() => setModal(!modal)}>
-          <span className='dayname'>{parseDay(date)}</span>
-          <div className='bottom-row'>
-            <span className='date'>{parseDate(date)}</span>
-            <span className='month'>{parseMonth(date)}</span>
-            {isToday(date) && (
-              <div className='today-arrow right'>
-                <FontAwesomeIcon icon={faLeftLong} />
+      <Wrapper date={date}>
+        <Container date={date}>
+          <DateTitle date={date} onClick={() => setModal(!modal)}>
+            <span className='dayname'>{parseDay(date)}</span>
+            <div className='bottom-row'>
+              <span className='date'>{parseDate(date)}</span>
+              <span className='month'>{parseMonth(date)}</span>
+              {isToday(date) && (
+                <div className='today-arrow right'>
+                  <FontAwesomeIcon icon={faLeftLong} />
+                </div>
+              )}
+            </div>
+          </DateTitle>
+
+          <div className='actions'>
+            <div
+              className={`action-pair ${isToday(date) ? 'labeled' : 'labeled'}`}
+            >
+              <Button
+                type='d'
+                date={date}
+                partOfDay={1}
+                bookings={dBookingsPart1}
+              />
+              <Button
+                type='d'
+                date={date}
+                partOfDay={2}
+                bookings={dBookingsPart2}
+              />
+            </div>
+            <div
+              className={`action-pair p ${
+                isToday(date) ? 'labeled' : 'labeled'
+              }`}
+            >
+              <Button
+                type='p'
+                date={date}
+                partOfDay={1}
+                bookings={pBookingsPart1}
+              />
+              <Button
+                type='p'
+                date={date}
+                partOfDay={2}
+                bookings={pBookingsPart2}
+              />
+            </div>
+          </div>
+        </Container>
+        {modal && (
+          <Modal close={() => setModal(!modal)}>
+            <header>
+              {parseDay(date) + ' ' + parseDate(date) + ' ' + parseMonth(date)}
+            </header>
+
+            <Main>
+              <h4>Kontorsplats</h4>
+              <div className='name-list'>
+                {dBookingsPart1.length > 0 && (
+                  <div>
+                    <h5>Förmiddag</h5>
+                    {dBookingsPart1.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </DateTitle>
+              <div className='name-list'>
+                {dBookingsPart2.length > 0 && (
+                  <div>
+                    <h5>Eftermiddag</h5>
+                    {dBookingsPart2.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-        <div className='actions'>
-          <div
-            className={`action-pair ${isToday(date) ? 'labeled' : 'labeled'}`}
-          >
-            <Button
-              type='d'
-              date={date}
-              partOfDay={1}
-              bookings={dBookingsPart1}
-            />
-            <Button
-              type='d'
-              date={date}
-              partOfDay={2}
-              bookings={dBookingsPart2}
-            />
-          </div>
-          <div
-            className={`action-pair p ${isToday(date) ? 'labeled' : 'labeled'}`}
-          >
-            <Button
-              type='p'
-              date={date}
-              partOfDay={1}
-              bookings={pBookingsPart1}
-            />
-            <Button
-              type='p'
-              date={date}
-              partOfDay={2}
-              bookings={pBookingsPart2}
-            />
-          </div>
-        </div>
-      </Container>
+              <h4>Parkering</h4>
+              <div className='name-list'>
+                {pBookingsPart1.length > 0 && (
+                  <div>
+                    <h5>Förmiddag</h5>
+                    {pBookingsPart1.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-      {modal && (
-        <Modal close={() => setModal(!modal)}>
-          <header>
-            {parseDay(date) + ' ' + parseDate(date) + ' ' + parseMonth(date)}
-          </header>
-
-          <Main>
-            <h4>Kontorsplats</h4>
-            <div className='name-list'>
-              {dBookingsPart1.length > 0 && (
-                <div>
-                  <h5>Förmiddag</h5>
-                  {dBookingsPart1.map(({ displayName, photoURL }, key) => (
-                    <UserDetails key={key}>
-                      <img src={photoURL} alt={displayName} />
-                      <span>{displayName}</span>
-                    </UserDetails>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className='name-list'>
-              {dBookingsPart2.length > 0 && (
-                <div>
-                  <h5>Eftermiddag</h5>
-                  {dBookingsPart2.map(({ displayName, photoURL }, key) => (
-                    <UserDetails key={key}>
-                      <img src={photoURL} alt={displayName} />
-                      <span>{displayName}</span>
-                    </UserDetails>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <h4>Parkering</h4>
-            <div className='name-list'>
-              {pBookingsPart1.length > 0 && (
-                <div>
-                  <h5>Förmiddag</h5>
-                  {pBookingsPart1.map(({ displayName, photoURL }, key) => (
-                    <UserDetails key={key}>
-                      <img src={photoURL} alt={displayName} />
-                      <span>{displayName}</span>
-                    </UserDetails>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className='name-list'>
-              {pBookingsPart2.length > 0 && (
-                <div>
-                  <h5>Eftermiddag</h5>
-                  {pBookingsPart2.map(({ displayName, photoURL }, key) => (
-                    <UserDetails key={key}>
-                      <img src={photoURL} alt={displayName} />
-                      <span>{displayName}</span>
-                    </UserDetails>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Main>
-        </Modal>
-      )}
-      {/* // </Wrapper> */}
+              <div className='name-list'>
+                {pBookingsPart2.length > 0 && (
+                  <div>
+                    <h5>Eftermiddag</h5>
+                    {pBookingsPart2.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </Main>
+          </Modal>
+        )}
+      </Wrapper>
     </>
   );
 }

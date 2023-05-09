@@ -23,30 +23,37 @@ const Container = styled.div<Styled>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 3rem;
-  height: 100%;
+  width: 4rem;
   border-radius: 0.5rem;
   background-color: #049be5;
-  font-size: 0.8rem;
-
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   color: white;
   cursor: ${({ button }) => (button === 'full' ? 'not-allowed' : 'pointer')};
 
+  @media screen and (max-width: 500px) {
+    width: 3rem;
+    font-size: 0.8rem;
+  }
+
   &.check {
-    background-color: #025f8d;
+    background-color: #1fc299;
+    transform: scale(0.98);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 10px 10px -12px inset,
+      rgba(0, 0, 0, 0.3) 0px 18px 26px -18px inset;
   }
   &.full {
     background-color: #d9d9d9;
     color: #9f9f9f;
     box-shadow: none;
   }
-  &.passed {
-    opacity: 0.5;
-  }
 `;
 
 const ContainerP = styled(Container)`
-  color: white;
+  background-color: hsl(199, 30%, 45%);
+
+  &.check {
+    /* background-color: hsl(199, 30%, 35%); */
+  }
 `;
 
 const Text = styled.span<{ date: string; trigger?: boolean }>`
