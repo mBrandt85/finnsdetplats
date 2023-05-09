@@ -1,12 +1,10 @@
 import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faParking, faCoffee, faMoon } from '@fortawesome/free-solid-svg-icons';
 
-import { Booking, useAppState } from '../providers/app-state';
-import { firestore } from '../firebase';
 import { useEffect, useState } from 'react';
-import { hasPassed, isToday } from '../utils/week';
+import { firestore } from '../firebase';
+import { Booking, useAppState } from '../providers/app-state';
+import { hasPassed } from '../utils/week';
 
 interface Styled {
   button: string;
@@ -32,12 +30,6 @@ const Container = styled.div<Styled>`
   font-size: 0.8rem;
 
   color: white;
-  /* box-shadow: ${({ button }) =>
-    button === 'check'
-      ? '0 .1rem .1rem rgba(255, 255, 255, 20%) inset'
-      : button === 'free'
-      ? '0 .1rem .1rem rgba(0, 0, 0, 100%)'
-      : 'none'}; */
   cursor: ${({ button }) => (button === 'full' ? 'not-allowed' : 'pointer')};
 
   &.check {
@@ -47,6 +39,9 @@ const Container = styled.div<Styled>`
     background-color: #d9d9d9;
     color: #9f9f9f;
     box-shadow: none;
+  }
+  &.passed {
+    opacity: 0.5;
   }
 `;
 

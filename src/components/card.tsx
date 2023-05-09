@@ -98,9 +98,7 @@ const Container = styled.div<Styled>`
   align-items: center;
   gap: 1rem;
   border-radius: 1rem;
-  /* justify-content: space-between; */
-  /* padding: ${({ date }) => (isToday(date) ? '.5rem 1rem' : '.5rem')}; */
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   background-color: ${({ date }) =>
     hasPassed(date)
       ? 'rgba(255, 255, 255, 40%)'
@@ -108,8 +106,6 @@ const Container = styled.div<Styled>`
       ? 'white'
       : 'rgb(250, 250, 250)'};
   box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
-  /* margin-left: ${({ date }) => (isToday(date) ? '-1rem' : '0')}; */
-  /* margin-right: ${({ date }) => (isToday(date) ? '-1rem' : '0')}; */
   animation-name: ${fadeIn};
   -webkit-animation-name: ${fadeIn};
   animation-duration: 0.3s;
@@ -121,14 +117,6 @@ const Container = styled.div<Styled>`
     width: 100vw;
     border-radius: 0;
   }
-
-  /* @media screen and (max-width: 500px) {
-    border-radius: ${({ date }) => (isToday(date) ? '0' : '.5rem')};
-  } */
-
-  /* @media screen and (min-width: 501px) {
-    margin-top: 1rem;
-  } */
 
   & .actions {
     display: flex;
@@ -193,9 +181,17 @@ const UserDetails = styled.div`
 const Main = styled.main`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
   & span {
     font-weight: normal;
+  }
+  h4 {
+    margin-top: 0.5rem;
+  }
+  .name-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0 1rem;
   }
 `;
 
@@ -272,40 +268,62 @@ export default function Card({ date, bookings }: Props) {
           </header>
 
           <Main>
-            {dBookingsPart1.length > 0 && (
-              <div>
-                <h4>Förmiddag</h4>
-                {dBookingsPart1.map(({ displayName, photoURL }, key) => (
-                  <UserDetails key={key}>
-                    <img src={photoURL} alt={displayName} />
-                    <span>{displayName}</span>
-                  </UserDetails>
-                ))}
-              </div>
-            )}
-            {dBookingsPart2.length > 0 && (
-              <div>
-                <h4>Eftermiddag</h4>
-                {dBookingsPart2.map(({ displayName, photoURL }, key) => (
-                  <UserDetails key={key}>
-                    <img src={photoURL} alt={displayName} />
-                    <span>{displayName}</span>
-                  </UserDetails>
-                ))}
-              </div>
-            )}
+            <h4>Kontorsplats</h4>
+            <div className='name-list'>
+              {dBookingsPart1.length > 0 && (
+                <div>
+                  <h5>Förmiddag</h5>
+                  {dBookingsPart1.map(({ displayName, photoURL }, key) => (
+                    <UserDetails key={key}>
+                      <img src={photoURL} alt={displayName} />
+                      <span>{displayName}</span>
+                    </UserDetails>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className='name-list'>
+              {dBookingsPart2.length > 0 && (
+                <div>
+                  <h5>Eftermiddag</h5>
+                  {dBookingsPart2.map(({ displayName, photoURL }, key) => (
+                    <UserDetails key={key}>
+                      <img src={photoURL} alt={displayName} />
+                      <span>{displayName}</span>
+                    </UserDetails>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {pBookings.length > 0 && (
-              <div>
-                <h4>Parkering</h4>
-                {pBookings.map(({ displayName, photoURL }, key) => (
-                  <UserDetails key={key}>
-                    <img src={photoURL} alt={displayName} />
-                    <span>{displayName}</span>
-                  </UserDetails>
-                ))}
-              </div>
-            )}
+            <h4>Parkering</h4>
+            <div className='name-list'>
+              {pBookingsPart1.length > 0 && (
+                <div>
+                  <h5>Förmiddag</h5>
+                  {pBookingsPart1.map(({ displayName, photoURL }, key) => (
+                    <UserDetails key={key}>
+                      <img src={photoURL} alt={displayName} />
+                      <span>{displayName}</span>
+                    </UserDetails>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className='name-list'>
+              {pBookingsPart2.length > 0 && (
+                <div>
+                  <h5>Eftermiddag</h5>
+                  {pBookingsPart2.map(({ displayName, photoURL }, key) => (
+                    <UserDetails key={key}>
+                      <img src={photoURL} alt={displayName} />
+                      <span>{displayName}</span>
+                    </UserDetails>
+                  ))}
+                </div>
+              )}
+            </div>
           </Main>
         </Modal>
       )}
