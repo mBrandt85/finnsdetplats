@@ -10,6 +10,7 @@ import Card from './card';
 import Loading from './loading';
 import Navigate from './navigate';
 import NotOk from './not-ok';
+import DarkMode from './darkmode';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -66,6 +67,11 @@ const Container = styled.div`
     -webkit-animation-duration: 0.3s;
     animation-timing-function: ease-in;
     -webkit-animation-timing-function: ease-in;
+
+    .buttons {
+      display: flex;
+      gap: 1rem;
+    }
 
     > span {
       padding: 1rem 0 0 1rem;
@@ -153,11 +159,16 @@ export default function View() {
     <Container>
       <header>
         <span>Finns det plats?</span>
-        <UserBadge onClick={() => setClicks(clicks + 1)}>
-          <img src={user!.photoURL!} alt={user!.displayName!} />
-          <div className='display-name'>{user!.displayName!.split(' ')[0]}</div>
-          <span></span>
-        </UserBadge>
+        <div className='buttons'>
+          {/* <DarkMode /> */}
+          <UserBadge onClick={() => setClicks(clicks + 1)}>
+            <img src={user!.photoURL!} alt={user!.displayName!} />
+            <div className='display-name'>
+              {user!.displayName!.split(' ')[0]}
+            </div>
+            <span></span>
+          </UserBadge>
+        </div>
       </header>
 
       <main>

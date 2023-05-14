@@ -1,6 +1,7 @@
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode } from 'react';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 
 interface Props {
@@ -25,9 +26,9 @@ const Backdrop = styled.div`
 const Content = styled.div`
   position: relative;
   width: 100%;
+  overflow-y: scroll;
   max-width: 24rem;
   max-height: 36rem;
-  z-index: 20;
   padding: 1rem;
   border-radius: 1rem;
   background-color: white;
@@ -59,7 +60,7 @@ const Close = styled.div`
 `;
 
 export default function Modal({ children, close }: Props) {
-  return (
+  return ReactDOM.createPortal(
     <Backdrop onClick={close}>
       <Content>
         <Close>
@@ -68,6 +69,7 @@ export default function Modal({ children, close }: Props) {
 
         {children}
       </Content>
-    </Backdrop>
+    </Backdrop>,
+    document.getElementById('modal') as HTMLElement
   );
 }
