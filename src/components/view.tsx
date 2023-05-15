@@ -10,18 +10,15 @@ import Card from './card';
 import Loading from './loading';
 import Navigate from './navigate';
 import NotOk from './not-ok';
-import DarkMode from './darkmode';
+// import DarkMode from './darkmode';
 
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  /* max-width: 36rem; */
   width: min-content;
   height: 100%;
-  /* overflow: auto; */
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
 
   @media screen and (max-width: 500px) {
     /* position: absolute; */

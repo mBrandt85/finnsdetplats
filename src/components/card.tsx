@@ -14,6 +14,7 @@ import {
 } from '../utils/week';
 import Button from './button';
 import Modal from './modal';
+import useForceUpdateInterval from '../hooks/useForceUpdateInterval';
 
 interface Styled {
   date: string;
@@ -192,6 +193,8 @@ export default function Card({ date, bookings }: Props) {
     ({ partOfDay }) => partOfDay === undefined || partOfDay === 1
   );
   const pBookingsPart2 = pBookings.filter(({ partOfDay }) => partOfDay === 2);
+
+  useForceUpdateInterval({ seconds: 10 }); // Makes sure "Today" stays fresh when window is open over several days
 
   return (
     <>
