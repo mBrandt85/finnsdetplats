@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import { Booking } from '../providers/app-state';
+import { Booking, useAppState } from '../providers/app-state';
 import { fadeIn } from '../utils/keyframes';
 import {
   hasPassed,
@@ -29,6 +29,17 @@ const Wrapper = styled.div<Styled>`
 `;
 
 const DateTitle = styled.div<Styled>`
+  &.dark {
+    .dayname {
+      color: white;
+    }
+    .bottom-row {
+      color: #ccc;
+    }
+    .today-arrow {
+      color: #16d8a7;
+    }
+  }
   display: flex;
   flex-direction: column;
   font-family: 'Roboto Condensed', sans-serif;
@@ -83,6 +94,19 @@ const DateTitle = styled.div<Styled>`
 `;
 
 const Container = styled.div<Styled>`
+  &.dark {
+    background-color: black;
+    color: #ccc;
+    outline: #ccc 1px solid;
+    box-shadow: none;
+    /* margin: -1px; */
+
+    .actions .action-pair.labeled:before {
+      background-color: black;
+      color: white;
+    }
+  }
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -194,13 +218,19 @@ export default function Card({ date, bookings }: Props) {
   );
   const pBookingsPart2 = pBookings.filter(({ partOfDay }) => partOfDay === 2);
 
+  const { lightmode } = useAppState();
+
   useForceUpdateInterval({ seconds: 10 }); // Makes sure "Today" stays fresh when window is open over several days
 
   return (
     <>
       <Wrapper date={date}>
-        <Container date={date}>
-          <DateTitle date={date} onClick={() => setModal(!modal)}>
+        <Container className={lightmode} date={date}>
+          <DateTitle
+            className={lightmode}
+            date={date}
+            onClick={() => setModal(!modal)}
+          >
             <span className='dayname'>{parseDay(date)}</span>
             <div className='bottom-row'>
               <span className='date'>{parseDate(date)}</span>

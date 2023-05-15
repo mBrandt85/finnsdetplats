@@ -18,6 +18,20 @@ interface Props {
 }
 
 const Container = styled.div<Styled>`
+  &.dark {
+    background-color: #3e3277;
+    &.check {
+      background-color: #ff00e6;
+      box-shadow: rgba(50, 50, 93, 0.35) 0px 10px 10px -12px inset,
+        rgba(0, 0, 0, 0.4) 0px 18px 26px -18px inset;
+    }
+    &.full {
+      background-color: #515151;
+      color: #a8a8a8;
+      box-shadow: none;
+    }
+  }
+
   display: flex;
   padding: 0.4rem;
   flex-direction: column;
@@ -28,6 +42,7 @@ const Container = styled.div<Styled>`
   background-color: #049be5;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   color: white;
+  transition: transform 200ms;
   cursor: ${({ button }) => (button === 'full' ? 'not-allowed' : 'pointer')};
 
   @media screen and (max-width: 500px) {
@@ -37,7 +52,7 @@ const Container = styled.div<Styled>`
 
   &.check {
     background-color: #1fc299;
-    transform: scale(0.98);
+    transform: scale(0.95);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 10px 10px -12px inset,
       rgba(0, 0, 0, 0.3) 0px 18px 26px -18px inset;
   }
@@ -49,6 +64,9 @@ const Container = styled.div<Styled>`
 `;
 
 const ContainerP = styled(Container)`
+  &.dark {
+    background-color: #482d5c;
+  }
   background-color: hsl(199, 30%, 45%);
 
   &.check {
@@ -77,7 +95,7 @@ interface Doc {
 }
 
 export default function Button({ type, date, bookings, partOfDay }: Props) {
-  const { user } = useAppState();
+  const { user, lightmode } = useAppState();
   const { uid, displayName, photoURL } = user!;
   const [loading, setLoading] = useState<boolean>(false);
   const [button, setButton] = useState<'passed' | 'free' | 'full' | 'check'>(
@@ -135,7 +153,11 @@ export default function Button({ type, date, bookings, partOfDay }: Props) {
 
   if (type === 'p')
     return (
-      <ContainerP className={button} button={button} onClick={onClick}>
+      <ContainerP
+        className={`${button} ${lightmode}`}
+        button={button}
+        onClick={onClick}
+      >
         <ButtonLabel>{partOfDay === 1 ? 'FM' : 'EM'}</ButtonLabel>
 
         <Text date={date}>
@@ -151,7 +173,11 @@ export default function Button({ type, date, bookings, partOfDay }: Props) {
     );
 
   return (
-    <Container className={button} button={button} onClick={onClick}>
+    <Container
+      className={`${button} ${lightmode}`}
+      button={button}
+      onClick={onClick}
+    >
       <ButtonLabel>{partOfDay === 1 ? 'FM' : 'EM'}</ButtonLabel>
       <Text date={date}>
         {loading ? (

@@ -10,7 +10,7 @@ import Card from './card';
 import Loading from './loading';
 import Navigate from './navigate';
 import NotOk from './not-ok';
-// import DarkMode from './darkmode';
+import DarkMode from './darkmode';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -35,6 +35,9 @@ const Container = styled.div`
     }
 
     .seperator {
+      &.dark {
+        background-color: #ddd;
+      }
       margin: 0 auto;
       margin-bottom: 0.5rem;
       width: 40px;
@@ -103,8 +106,15 @@ const UserBadge = styled.div`
 `;
 
 export default function View() {
-  const { user, clearUser, week, bookings, addBooking, removeBooking } =
-    useAppState();
+  const {
+    user,
+    clearUser,
+    week,
+    bookings,
+    addBooking,
+    removeBooking,
+    lightmode,
+  } = useAppState();
   const [loading, setLoading] = useState<boolean>(true);
   const [clicks, setClicks] = useState<number>(0);
 
@@ -157,7 +167,7 @@ export default function View() {
       <header>
         <span>Finns det plats?</span>
         <div className='buttons'>
-          {/* <DarkMode /> */}
+          <DarkMode />
           <UserBadge onClick={() => setClicks(clicks + 1)}>
             <img src={user!.photoURL!} alt={user!.displayName!} />
             <div className='display-name'>
@@ -177,7 +187,7 @@ export default function View() {
                 date={date}
                 bookings={bookings.filter((booking) => booking.date === date)}
               />
-              {idx === 4 && <div className='seperator'></div>}
+              {idx === 4 && <div className={`${lightmode} seperator`}></div>}
             </>
           );
         })}

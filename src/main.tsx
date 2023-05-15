@@ -19,7 +19,13 @@ import { useAppState } from './providers/app-state';
 import { getWeek } from './utils/week';
 
 function App() {
-  const { user, setUser, setWeek } = useAppState();
+  const { user, setUser, setWeek, lightmode } = useAppState();
+
+  useEffect(() => {
+    if (lightmode === 'dark') document.body.style.backgroundColor = '#111';
+    else document.body.style.backgroundColor = 'rgb(144, 165, 171)';
+  }, [lightmode]);
+
   const [loading, setLoading] = useState<boolean>(true);
 
   const specialForces = [

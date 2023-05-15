@@ -1,19 +1,28 @@
 import { createContext, ReactNode, useContext, useReducer } from 'react';
 import { User } from 'firebase/auth';
+import { LightMode } from '../components/darkmode';
 
 interface AppStateContext {
   user: User | null;
   week: Day[];
   bookings: Booking[];
+  lightmode: LightMode;
   setUser: (payload: User) => void;
   clearUser: () => void;
   setWeek: (payload: Day[]) => void;
   addBooking: (payload: Booking) => void;
   removeBooking: (payload: string) => void;
+  setLightMode: (payload: LightMode) => void;
 }
 
 interface AppStateAction {
-  type: 'SET_USER' | 'CLEAR_USER' | 'SET_WEEK' | 'ADD_BOOKING' | 'REMOVE_BOOKING';
+  type:
+    | 'SET_USER'
+    | 'CLEAR_USER'
+    | 'SET_WEEK'
+    | 'ADD_BOOKING'
+    | 'REMOVE_BOOKING'
+    | 'SET_LIGHTMODE';
   payload?: any;
 }
 
@@ -31,7 +40,10 @@ export interface Booking {
   partOfDay?: number;
 }
 
-const reducer = (state: AppStateContext, action: AppStateAction): AppStateContext => {
+const reducer = (
+  state: AppStateContext,
+  action: AppStateAction
+): AppStateContext => {
   switch (action.type) {
     case 'SET_USER':
       return {
@@ -63,6 +75,11 @@ const reducer = (state: AppStateContext, action: AppStateAction): AppStateContex
         ...state,
         bookings: state.bookings.filter(({ id }) => id !== action.payload),
       };
+    case 'SET_LIGHTMODE':
+      return {
+        ...state,
+        lightmode: action.payload,
+      };
 
     default:
       return state;
@@ -71,24 +88,36 @@ const reducer = (state: AppStateContext, action: AppStateAction): AppStateContex
 
 const AppState = createContext({} as AppStateContext);
 
-export default function AppStateProvider({ children }: { children: ReactNode }) {
+export default function AppStateProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const setUser = (payload: User) => dispatch({ type: 'SET_USER', payload });
   const clearUser = () => dispatch({ type: 'CLEAR_USER' });
 
   const setWeek = (payload: Day[]) => dispatch({ type: 'SET_WEEK', payload });
 
-  const addBooking = (payload: Booking) => dispatch({ type: 'ADD_BOOKING', payload });
-  const removeBooking = (payload: string) => dispatch({ type: 'REMOVE_BOOKING', payload });
+  const addBooking = (payload: Booking) =>
+    dispatch({ type: 'ADD_BOOKING', payload });
+  const removeBooking = (payload: string) =>
+    dispatch({ type: 'REMOVE_BOOKING', payload });
+  const setLightMode = (payload: LightMode) => {
+    localStorage.setItem('lightmode', payload);
+    return dispatch({ type: 'SET_LIGHTMODE', payload });
+  };
 
   const [state, dispatch] = useReducer(reducer, {
     user: null,
     week: [],
     bookings: [],
+    lightmode: (localStorage.getItem('lightmode') as LightMode) ?? 'light',
     setUser,
     clearUser,
     setWeek,
     addBooking,
     removeBooking,
+    setLightMode,
   });
 
   return <AppState.Provider value={state}>{children}</AppState.Provider>;

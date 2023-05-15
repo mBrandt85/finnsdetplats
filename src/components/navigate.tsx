@@ -33,6 +33,9 @@ const Container = styled.div`
 `;
 
 const Button = styled.span<{ next?: boolean; home?: boolean }>`
+  &.dark {
+    background-color: #3e3277;
+  }
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,7 +60,7 @@ const Button = styled.span<{ next?: boolean; home?: boolean }>`
 `;
 
 export default function Navigate() {
-  const { week, setWeek } = useAppState();
+  const { week, setWeek, lightmode } = useAppState();
   const [show, setShow] = useState<boolean>(false);
 
   const handleLast = () => setWeek(lastWeek(week[0].date));
@@ -73,17 +76,17 @@ export default function Navigate() {
 
   return (
     <Container>
-      <Button onClick={handleLast}>
+      <Button className={lightmode} onClick={handleLast}>
         <FontAwesomeIcon icon={faAngleLeft} />
       </Button>
 
       {show && (
-        <Button home onClick={handleCurrent}>
+        <Button className={lightmode} home onClick={handleCurrent}>
           <FontAwesomeIcon icon={faCalendarDay} />
         </Button>
       )}
 
-      <Button next onClick={handleNext}>
+      <Button className={lightmode} next onClick={handleNext}>
         <FontAwesomeIcon icon={faAngleRight} />
       </Button>
     </Container>
