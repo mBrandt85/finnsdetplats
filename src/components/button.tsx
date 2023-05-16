@@ -21,7 +21,7 @@ const Container = styled.div<Styled>`
   &.dark {
     background-color: #3e3277;
     &.check {
-      background-color: #ff00e6;
+      background-color: orange;
       box-shadow: rgba(50, 50, 93, 0.35) 0px 10px 10px -12px inset,
         rgba(0, 0, 0, 0.4) 0px 18px 26px -18px inset;
     }
@@ -42,7 +42,7 @@ const Container = styled.div<Styled>`
   background-color: #049be5;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   color: white;
-  transition: transform 200ms;
+  transition: background-color 200ms, transform 200ms;
   cursor: ${({ button }) => (button === 'full' ? 'not-allowed' : 'pointer')};
 
   @media screen and (max-width: 500px) {
@@ -65,13 +65,9 @@ const Container = styled.div<Styled>`
 
 const ContainerP = styled(Container)`
   &.dark {
-    background-color: #482d5c;
+    background-color: #492d5c;
   }
   background-color: hsl(199, 30%, 45%);
-
-  &.check {
-    /* background-color: hsl(199, 30%, 35%); */
-  }
 `;
 
 const Text = styled.span<{ date: string; trigger?: boolean }>`

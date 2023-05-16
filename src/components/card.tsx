@@ -37,7 +37,11 @@ const DateTitle = styled.div<Styled>`
       color: #ccc;
     }
     .today-arrow {
-      color: #16d8a7;
+      color: orange;
+    }
+
+    &:hover {
+      background-color: #222;
     }
   }
   display: flex;
@@ -73,22 +77,21 @@ const DateTitle = styled.div<Styled>`
 
   .today-arrow {
     color: rgba(200, 0, 0);
-    transform: translateX(5rem);
     animation: bounce 1.5s infinite;
     animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
     animation-name: bounce;
-    transform: translateX(0.1rem);
+    transform: translateX(0.2rem);
   }
 
   @keyframes bounce {
     0% {
-      transform: translateX(0.1rem);
+      transform: translateX(0.2rem);
     }
     80% {
-      transform: translateX(0.5rem);
+      transform: translateX(0.9rem);
     }
     100% {
-      transform: translateX(0.1rem);
+      transform: translateX(0.2rem);
     }
   }
 `;
