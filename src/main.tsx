@@ -22,8 +22,8 @@ function App() {
   const { user, setUser, setWeek, lightmode } = useAppState();
 
   useEffect(() => {
-    if (lightmode === 'dark') document.body.style.backgroundColor = '#111';
-    else document.body.style.backgroundColor = 'rgb(144, 165, 171)';
+    if (lightmode === 'dark') document.body.style.backgroundColor = 'black';
+    else document.body.style.backgroundColor = 'white';
   }, [lightmode]);
 
   const [loading, setLoading] = useState<boolean>(true);

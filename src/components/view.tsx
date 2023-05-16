@@ -11,6 +11,7 @@ import Loading from './loading';
 import Navigate from './navigate';
 import NotOk from './not-ok';
 import DarkMode from './darkmode';
+import Background from './background';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -19,6 +20,7 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 
   @media screen and (max-width: 500px) {
     /* position: absolute; */
@@ -163,37 +165,40 @@ export default function View() {
   if (!user) return <NotOk />;
 
   return (
-    <Container>
-      <header>
-        <span>Finns det plats?</span>
-        <div className='buttons'>
-          <DarkMode />
-          <UserBadge onClick={() => setClicks(clicks + 1)}>
-            <img src={user!.photoURL!} alt={user!.displayName!} />
-            <div className='display-name'>
-              {user!.displayName!.split(' ')[0]}
-            </div>
-            <span></span>
-          </UserBadge>
-        </div>
-      </header>
+    <>
+      <Background />
+      <Container>
+        <header>
+          <span>Finns det plats?</span>
+          <div className='buttons'>
+            <DarkMode />
+            <UserBadge onClick={() => setClicks(clicks + 1)}>
+              <img src={user!.photoURL!} alt={user!.displayName!} />
+              <div className='display-name'>
+                {user!.displayName!.split(' ')[0]}
+              </div>
+              <span></span>
+            </UserBadge>
+          </div>
+        </header>
 
-      <main>
-        {week.map(({ date }, idx) => {
-          return (
-            <>
-              <Card
-                key={idx}
-                date={date}
-                bookings={bookings.filter((booking) => booking.date === date)}
-              />
-              {idx === 4 && <div className={`${lightmode} seperator`}></div>}
-            </>
-          );
-        })}
-      </main>
+        <main>
+          {week.map(({ date }, idx) => {
+            return (
+              <>
+                <Card
+                  key={idx}
+                  date={date}
+                  bookings={bookings.filter((booking) => booking.date === date)}
+                />
+                {idx === 4 && <div className={`${lightmode} seperator`}></div>}
+              </>
+            );
+          })}
+        </main>
 
-      <Navigate />
-    </Container>
+        <Navigate />
+      </Container>
+    </>
   );
 }
