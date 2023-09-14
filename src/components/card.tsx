@@ -229,8 +229,6 @@ export default function Card({ date, bookings }: Props) {
 
     useForceUpdateInterval({ seconds: 10 }); // Makes sure "Today" stays fresh when window is open over several days
 
-    console.log(bookings);
-
     return (
         <>
             <Wrapper date={date}>

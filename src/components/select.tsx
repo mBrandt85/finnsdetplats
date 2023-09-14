@@ -15,11 +15,12 @@ const Container = styled.div`
     flex-direction: column;
 
     > label {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     > select {
-        padding-left: 0%.75;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
         height: 2rem;
     }
 `;

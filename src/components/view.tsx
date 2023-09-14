@@ -1,8 +1,14 @@
 import { signOut, Unsubscribe } from 'firebase/auth';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    getDoc,
+    onSnapshot,
+    query,
+    where,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import { auth, firestore } from '../firebase';
 import { Booking, useAppState } from '../providers/app-state';
 import { fadeIn } from '../utils/keyframes';
@@ -75,6 +81,7 @@ const Container = styled.div`
         .buttons {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
             gap: 1rem;
         }
@@ -83,7 +90,6 @@ const Container = styled.div`
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            background-color: red;
         }
 
         > span {
@@ -123,6 +129,7 @@ export default function View() {
         user,
         clearUser,
         week,
+        setLocation,
         bookings,
         addBooking,
         removeBooking,
@@ -135,6 +142,23 @@ export default function View() {
         await signOut(auth);
         clearUser();
     };
+
+    async function fetchLocation() {
+        const uid = user?.uid ? user.uid : 'default';
+        const docRef = doc(firestore, 'locations', uid);
+
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            await setLocation(docSnap.data().location);
+        } else {
+            console.log('No such document!');
+        }
+    }
+
+    useEffect(() => {
+        fetchLocation();
+    }, []);
 
     useEffect(() => {
         if (clicks === 10) logout();
@@ -172,7 +196,7 @@ export default function View() {
         // eslint-disable-next-line
     }, [week]);
 
-    if (loading) return <Loading text="hämtar bokningar..." />;
+    if (loading) return <Loading text="Hämtar bokningar..." />;
 
     if (!user) return <NotOk />;
 

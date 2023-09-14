@@ -10,7 +10,8 @@ service cloud.firestore {
           	'magnusbrandt85@gmail.com',
             'sebastianberglonn@gmail.com',
             'en.ahmadmarei@gmail.com',
-            'mattias.pedersen89@gmail.com'
+            'mattias.pedersen89@gmail.com',
+            'ljwedin@gmail.com'
           ]
         );
     }
@@ -32,5 +33,22 @@ service cloud.firestore {
       allow create: if canCreate();
       allow delete: if canDelete();
     }
+
+      match /locations/{locationsId} {
+    function canCreate() {
+        return isAuth()
+          && request.auth.uid == request.resource.data.uid
+      }
+
+      function canDelete() {
+        return isAuth()
+          && request.auth.uid == resource.data.uid;
+      }
+
+      allow read: if isAuth();
+      allow create: if canCreate();
+      allow delete: if canDelete();
+    
+  }
   }
 }
