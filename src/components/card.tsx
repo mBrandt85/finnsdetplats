@@ -290,13 +290,18 @@ export default function Card({ date, bookings }: Props) {
                     </div>
                 </Container>
                 {modal && (
-                    <Modal close={() => setModal(!modal)}>
+                    <Modal
+                        close={() => setModal(!modal)}
+                        isDefaultLocationModal={false}
+                    >
                         <header>
-                            {parseDay(date) +
-                                ' ' +
-                                parseDate(date) +
-                                ' ' +
-                                parseMonth(date)}
+                            <h1>
+                                {parseDay(date) +
+                                    ' ' +
+                                    parseDate(date) +
+                                    ' ' +
+                                    parseMonth(date)}
+                            </h1>
                         </header>
 
                         <Main>

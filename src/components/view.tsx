@@ -93,6 +93,7 @@ const Container = styled.div`
             align-items: center;
             width: 100%;
             gap: 1rem;
+            padding-left: 1rem;
         }
 
         > div > .rightButtons {
@@ -133,7 +134,9 @@ export default function View() {
 
     async function fetchDefaultLocation() {
         const uid = user?.uid ? user.uid : 'default';
-        const docRef = doc(firestore, 'locations', uid);
+        const docRef = doc(firestore, 'employeeDefaultLocations', uid);
+
+        console.log('Uid: ', uid);
 
         const docSnap = await getDoc(docRef);
 
@@ -200,6 +203,7 @@ export default function View() {
                     </div>
                     <div className="buttons">
                         <Select
+                            isDefaultModal={false}
                             options={[
                                 { value: 'Luleå', text: 'Luleå' },
                                 { value: 'Umeå', text: 'Umeå' },

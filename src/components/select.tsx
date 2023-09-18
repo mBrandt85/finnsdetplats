@@ -8,11 +8,11 @@ interface SelectOption {
 
 interface Props {
     options: SelectOption[];
+    isDefaultModal: boolean;
 }
 
 const Container = styled.div`
     display: flex;
-    padding-left: 1rem;
     gap: 6px;
     > label {
         font-size: 1.1rem;
@@ -44,7 +44,7 @@ const Container = styled.div`
     }
 `;
 
-export default function Select({ options }: Props) {
+export default function Select({ options, isDefaultModal }: Props) {
     const { defaultLocation, setLocation } = useAppState();
 
     return (
@@ -53,7 +53,9 @@ export default function Select({ options }: Props) {
                 id="select-town"
                 name="select-town"
                 defaultValue={defaultLocation}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) =>
+                    isDefaultModal ? null : setLocation(e.target.value)
+                }
             >
                 {options.map((item, index) => (
                     <option key={index} value={item.value}>
