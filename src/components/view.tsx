@@ -19,6 +19,7 @@ import NotOk from './not-ok';
 import DarkMode from './darkmode';
 import Background from './background';
 import Select from './select';
+import UserBadge from './userInfo';
 
 const Container = styled.div`
     margin: 0 auto;
@@ -78,6 +79,14 @@ const Container = styled.div`
         animation-timing-function: ease-in;
         -webkit-animation-timing-function: ease-in;
 
+        .select-label-container {
+            width: 100%;
+            padding-left: 1rem;
+            & > label {
+                font-size: 1rem;
+            }
+        }
+
         .buttons {
             display: flex;
             justify-content: space-between;
@@ -92,35 +101,12 @@ const Container = styled.div`
             gap: 0.75rem;
         }
 
-        > span {
+        > h1 {
             padding: 1rem 0 0 1rem;
+            font-size: 2rem;
             color: white;
             text-shadow: 0.1rem 0.1rem 0 rgba(0, 0, 0, 25%);
         }
-    }
-`;
-
-const UserBadge = styled.div`
-    display: flex;
-    align-items: center;
-    padding: 2px 0;
-    font-size: 1.25rem;
-    background-color: white;
-    border-radius: 9999999px;
-    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
-
-    & > img {
-        border-radius: 50%;
-        width: 1.75rem;
-        height: 1.75rem;
-        margin-left: 0.2rem;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 25%);
-    }
-
-    & > .display-name {
-        color: #444;
-        font-size: 1.1rem;
-        padding: 0 0.75rem 0 0.5rem;
     }
 `;
 
@@ -129,7 +115,9 @@ export default function View() {
         user,
         clearUser,
         week,
-        setLocation,
+        location,
+        defaultLocation,
+        setDefaultLocation,
         bookings,
         addBooking,
         removeBooking,
@@ -143,21 +131,22 @@ export default function View() {
         clearUser();
     };
 
-    async function fetchLocation() {
+    async function fetchDefaultLocation() {
         const uid = user?.uid ? user.uid : 'default';
         const docRef = doc(firestore, 'locations', uid);
 
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            await setLocation(docSnap.data().location);
+            console.log('trying to set default location to: ', docSnap.data());
+            await setDefaultLocation(docSnap.data().location);
         } else {
             console.log('No such document!');
         }
     }
 
     useEffect(() => {
-        fetchLocation();
+        fetchDefaultLocation();
     }, []);
 
     useEffect(() => {
@@ -205,33 +194,29 @@ export default function View() {
             <Background />
             <Container>
                 <header>
-                    <span>Finns det plats?</span>
+                    <h1>Boka plats</h1>
+                    <div className="select-label-container">
+                        <label htmlFor="select-town">Välj stad</label>
+                    </div>
                     <div className="buttons">
                         <Select
-                            label={'Välj stad'}
                             options={[
-                                { value: 'lulea', text: 'Luleå' },
-                                { value: 'umea', text: 'Umeå' },
-                                { value: 'ostersund', text: 'Östersund' },
+                                { value: 'Luleå', text: 'Luleå' },
+                                { value: 'Umeå', text: 'Umeå' },
+                                { value: 'Östersund', text: 'Östersund' },
                             ]}
                         />
+
                         <div className="rightButtons">
                             <DarkMode />
-                            <UserBadge onClick={() => setClicks(clicks + 1)}>
-                                <img
-                                    src={
-                                        user!.photoURL!
-                                    } /*alt={user!.displayName!}*/
-                                />
-                                <div className="display-name">
-                                    {user!.displayName!.split(' ')[0]}
-                                </div>
-                                <span></span>
-                            </UserBadge>
+                            <UserBadge
+                                name={user!.displayName!.split(' ')[0]}
+                                defaultLocation={defaultLocation}
+                                photoUrl={user!.photoURL!}
+                            />
                         </div>
                     </div>
                 </header>
-
                 <main>
                     {week.map(({ date }, idx) => {
                         return (

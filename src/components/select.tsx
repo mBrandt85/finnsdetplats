@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useAppState } from '../providers/app-state';
 
 interface SelectOption {
     value: string;
@@ -6,14 +7,13 @@ interface SelectOption {
 }
 
 interface Props {
-    label: string;
     options: SelectOption[];
 }
 
 const Container = styled.div`
     display: flex;
-    flex-direction: column;
-
+    padding-left: 1rem;
+    gap: 6px;
     > label {
         font-size: 1.1rem;
     }
@@ -23,15 +23,42 @@ const Container = styled.div`
         padding-right: 0.75rem;
         height: 2rem;
     }
+
+    > button {
+        border-radius: 999px;
+        border: none;
+        &.dark {
+            background-color: #3e3277;
+        }
+        background-color: rgb(6, 155, 229);
+        color: white;
+        padding: 4px 10px;
+        font-weight: 500;
+        @media screen and (min-width: 501px) {
+            box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
+        }
+
+        @media screen and (max-width: 500px) {
+            box-shadow: 0 0 0.25rem rgba(0, 0, 0, 25%);
+        }
+    }
 `;
 
-export default function Select({ label, options }: Props) {
+export default function Select({ options }: Props) {
+    const { defaultLocation, setLocation } = useAppState();
+
     return (
         <Container>
-            <label htmlFor="select-town">{label}</label>
-            <select id="select-town" name="select-town">
-                {options.map((item) => (
-                    <option value={item.value}>{item.text}</option>
+            <select
+                id="select-town"
+                name="select-town"
+                defaultValue={defaultLocation}
+                onChange={(e) => setLocation(e.target.value)}
+            >
+                {options.map((item, index) => (
+                    <option key={index} value={item.value}>
+                        {item.text}
+                    </option>
                 ))}
             </select>
         </Container>

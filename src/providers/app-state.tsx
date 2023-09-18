@@ -5,13 +5,15 @@ import { LightMode } from '../components/darkmode';
 interface AppStateContext {
     user: User | null;
     week: Day[];
-    location: Location | null;
+    location: string;
+    defaultLocation: string;
     bookings: Booking[];
     lightmode: LightMode;
     setUser: (payload: User) => void;
     clearUser: () => void;
     setWeek: (payload: Day[]) => void;
-    setLocation: (payload: Location) => void;
+    setLocation: (payload: string) => void;
+    setDefaultLocation: (payload: string) => void;
     addBooking: (payload: Booking) => void;
     removeBooking: (payload: string) => void;
     setLightMode: (payload: LightMode) => void;
@@ -23,6 +25,7 @@ interface AppStateAction {
         | 'CLEAR_USER'
         | 'SET_WEEK'
         | 'SET_LOCATION'
+        | 'SET_DEFAULT_LOCATION'
         | 'ADD_BOOKING'
         | 'REMOVE_BOOKING'
         | 'SET_LIGHTMODE';
@@ -31,11 +34,6 @@ interface AppStateAction {
 
 export interface Day {
     date: string;
-}
-
-export interface Location {
-    id?: string;
-    location: string;
 }
 
 export interface Booking {
@@ -76,7 +74,13 @@ const reducer = (
         case 'SET_LOCATION':
             return {
                 ...state,
-                location: action.payload as Location,
+                location: action.payload,
+            };
+
+        case 'SET_DEFAULT_LOCATION':
+            return {
+                ...state,
+                defaultLocation: action.payload,
             };
 
         case 'ADD_BOOKING':
@@ -113,8 +117,10 @@ export default function AppStateProvider({
     const setUser = (payload: User) => dispatch({ type: 'SET_USER', payload });
     const clearUser = () => dispatch({ type: 'CLEAR_USER' });
     const setWeek = (payload: Day[]) => dispatch({ type: 'SET_WEEK', payload });
-    const setLocation = (payload: Location) =>
+    const setLocation = (payload: string) =>
         dispatch({ type: 'SET_LOCATION', payload });
+    const setDefaultLocation = (payload: string) =>
+        dispatch({ type: 'SET_DEFAULT_LOCATION', payload });
     const addBooking = (payload: Booking) =>
         dispatch({ type: 'ADD_BOOKING', payload });
     const removeBooking = (payload: string) =>
@@ -127,13 +133,15 @@ export default function AppStateProvider({
     const [state, dispatch] = useReducer(reducer, {
         user: null,
         week: [],
-        location: null,
+        location: { location: '' },
+        defaultLocation: { location: '' },
         bookings: [],
         lightmode: (localStorage.getItem('lightmode') as LightMode) ?? 'light',
         setUser,
         clearUser,
         setWeek,
         setLocation,
+        setDefaultLocation,
         addBooking,
         removeBooking,
         setLightMode,
