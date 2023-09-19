@@ -1,9 +1,11 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from './modal';
 import { useAppState } from '../providers/app-state';
+import { doc, setDoc } from 'firebase/firestore';
+import { firestore } from '../firebase';
 
 const Container = styled.div`
     display: flex;
@@ -58,12 +60,23 @@ export default function UserBadge(props: {
 }) {
     const [modal, setModal] = useState<boolean>(false);
     const [selectedLocation, setSelectedLocation] = useState('');
-    const { defaultLocation, setDefaultLocation } = useAppState();
+    const { user, defaultLocation, setDefaultLocation } = useAppState();
     const options = [
         { value: 'Luleå', text: 'Luleå' },
         { value: 'Umeå', text: 'Umeå' },
         { value: 'Östersund', text: 'Östersund' },
     ];
+
+    async function updateDefaultLocation() {
+        const uid = user?.uid ? user.uid : 'default';
+        const docRef = doc(firestore, 'employeeDefaultLocations', uid);
+
+        await setDoc(docRef, { location: defaultLocation });
+    }
+
+    useEffect(() => {
+        updateDefaultLocation();
+    }, [defaultLocation]);
 
     return (
         <>
