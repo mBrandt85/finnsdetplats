@@ -5,14 +5,15 @@ import { LightMode } from '../components/darkmode';
 interface AppStateContext {
     user: User | null;
     week: Day[];
-    location: string;
+    locations: Location[];
+    currentLocation: string;
     defaultLocation: string;
     bookings: Booking[];
     lightmode: LightMode;
     setUser: (payload: User) => void;
     clearUser: () => void;
     setWeek: (payload: Day[]) => void;
-    setLocation: (payload: string) => void;
+    setCurrentLocation: (payload: string) => void;
     setDefaultLocation: (payload: string) => void;
     addBooking: (payload: Booking) => void;
     removeBooking: (payload: string) => void;
@@ -32,6 +33,11 @@ interface AppStateAction {
     payload?: any;
 }
 
+interface Location {
+    value: string;
+    text: string;
+}
+
 export interface Day {
     date: string;
 }
@@ -41,7 +47,7 @@ export interface Booking {
     date: string;
     type: 'd' | 'p';
     uid: string;
-    location: string;
+    currentLocation: string;
     displayName: string;
     photoURL: string;
     partOfDay?: number;
@@ -74,7 +80,7 @@ const reducer = (
         case 'SET_LOCATION':
             return {
                 ...state,
-                location: action.payload,
+                currentLocation: action.payload,
             };
 
         case 'SET_DEFAULT_LOCATION':
@@ -117,7 +123,7 @@ export default function AppStateProvider({
     const setUser = (payload: User) => dispatch({ type: 'SET_USER', payload });
     const clearUser = () => dispatch({ type: 'CLEAR_USER' });
     const setWeek = (payload: Day[]) => dispatch({ type: 'SET_WEEK', payload });
-    const setLocation = (payload: string) =>
+    const setCurrentLocation = (payload: string) =>
         dispatch({ type: 'SET_LOCATION', payload });
     const setDefaultLocation = (payload: string) =>
         dispatch({ type: 'SET_DEFAULT_LOCATION', payload });
@@ -133,14 +139,19 @@ export default function AppStateProvider({
     const [state, dispatch] = useReducer(reducer, {
         user: null,
         week: [],
-        location: { location: '' },
+        locations: [
+            { value: 'Luleå', text: 'Luleå' },
+            { value: 'Umeå', text: 'Umeå' },
+            { value: 'Östersund', text: 'Östersund' },
+        ],
+        currentLocation: { location: '' },
         defaultLocation: { location: '' },
         bookings: [],
         lightmode: (localStorage.getItem('lightmode') as LightMode) ?? 'light',
         setUser,
         clearUser,
         setWeek,
-        setLocation,
+        setCurrentLocation,
         setDefaultLocation,
         addBooking,
         removeBooking,

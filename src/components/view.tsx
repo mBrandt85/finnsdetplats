@@ -18,7 +18,6 @@ import Navigate from './navigate';
 import NotOk from './not-ok';
 import DarkMode from './darkmode';
 import Background from './background';
-import Select from './select';
 import UserBadge from './userInfo';
 
 const Container = styled.div`
@@ -94,6 +93,12 @@ const Container = styled.div`
             width: 100%;
             gap: 1rem;
             padding-left: 1rem;
+
+            > select {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+                height: 2rem;
+            }
         }
 
         > div > .rightButtons {
@@ -116,7 +121,8 @@ export default function View() {
         user,
         clearUser,
         week,
-        location,
+        locations,
+        setCurrentLocation,
         defaultLocation,
         setDefaultLocation,
         bookings,
@@ -202,14 +208,18 @@ export default function View() {
                         <label htmlFor="select-town">Välj stad</label>
                     </div>
                     <div className="buttons">
-                        <Select
-                            isDefaultModal={false}
-                            options={[
-                                { value: 'Luleå', text: 'Luleå' },
-                                { value: 'Umeå', text: 'Umeå' },
-                                { value: 'Östersund', text: 'Östersund' },
-                            ]}
-                        />
+                        <select
+                            id="select-town"
+                            name="select-town"
+                            defaultValue={defaultLocation}
+                            onChange={(e) => setCurrentLocation(e.target.value)}
+                        >
+                            {locations.map((item, index) => (
+                                <option key={index} value={item.value}>
+                                    {item.text}
+                                </option>
+                            ))}
+                        </select>
 
                         <div className="rightButtons">
                             <DarkMode />
