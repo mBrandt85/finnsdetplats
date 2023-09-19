@@ -142,12 +142,9 @@ export default function View() {
         const uid = user?.uid ? user.uid : 'default';
         const docRef = doc(firestore, 'employeeDefaultLocations', uid);
 
-        console.log('Uid: ', uid);
-
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            console.log('trying to set default location to: ', docSnap.data());
             await setDefaultLocation(docSnap.data().location);
         } else {
             console.log('No such document!');
@@ -224,6 +221,8 @@ export default function View() {
                         <div className="rightButtons">
                             <DarkMode />
                             <UserBadge
+                                clicks={clicks}
+                                setClicks={setClicks}
                                 name={user!.displayName!.split(' ')[0]}
                                 defaultLocation={defaultLocation}
                                 photoUrl={user!.photoURL!}
@@ -234,7 +233,7 @@ export default function View() {
                 <main>
                     {week.map(({ date }, idx) => {
                         return (
-                            <>
+                            <div key={idx}>
                                 <Card
                                     key={idx}
                                     date={date}
@@ -247,7 +246,7 @@ export default function View() {
                                         className={`${lightmode} seperator`}
                                     ></div>
                                 )}
-                            </>
+                            </div>
                         );
                     })}
                 </main>

@@ -57,6 +57,8 @@ export default function UserBadge(props: {
     name: string;
     defaultLocation: string;
     photoUrl: string;
+    clicks: number;
+    setClicks: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const [modal, setModal] = useState<boolean>(false);
     const [selectedLocation, setSelectedLocation] = useState('');
@@ -81,7 +83,11 @@ export default function UserBadge(props: {
     return (
         <>
             <Container>
-                <img src={props.photoUrl} alt={'' /*user!.displayName!*/} />
+                <img
+                    src={props.photoUrl}
+                    alt={'' /*user!.displayName!*/}
+                    onClick={() => props.setClicks(props.clicks + 1)}
+                />
                 <p>{props.name},</p>
                 <p>
                     {props.defaultLocation ? props.defaultLocation : 'Hemlös'}
