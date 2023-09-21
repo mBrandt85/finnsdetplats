@@ -12,7 +12,7 @@ import {
     parseDay,
     parseMonth,
 } from '../utils/week';
-import Button from './button';
+import BookingButton from './BookingButton';
 import Modal from './modal';
 import useForceUpdateInterval from '../hooks/useForceUpdateInterval';
 
@@ -22,6 +22,8 @@ interface Styled {
 
 interface Props extends Styled {
     bookings: Booking[];
+    numOfSeats: number;
+    numOfParkingSpots: number;
 }
 
 const Wrapper = styled.div<Styled>`
@@ -210,6 +212,7 @@ const Main = styled.main`
 
 export default function Card({ date, bookings }: Props) {
     const [modal, setModal] = useState<boolean>(false);
+
     const dayBookings = bookings.filter(({ type }) => type === 'd');
     const dayBookingsPart1 = dayBookings.filter(
         ({ partOfDay }) => partOfDay === undefined || partOfDay === 1
@@ -225,7 +228,7 @@ export default function Card({ date, bookings }: Props) {
         ({ partOfDay }) => partOfDay === 2
     );
 
-    const { lightmode } = useAppState();
+    const { lightmode, currentLocation } = useAppState();
 
     useForceUpdateInterval({ seconds: 10 }); // Makes sure "Today" stays fresh when window is open over several days
 
@@ -256,13 +259,13 @@ export default function Card({ date, bookings }: Props) {
                                 isToday(date) ? 'labeled' : 'labeled'
                             }`}
                         >
-                            <Button
+                            <BookingButton
                                 type="d"
                                 date={date}
                                 partOfDay={1}
                                 bookings={dayBookingsPart1}
                             />
-                            <Button
+                            <BookingButton
                                 type="d"
                                 date={date}
                                 partOfDay={2}
@@ -274,13 +277,13 @@ export default function Card({ date, bookings }: Props) {
                                 isToday(date) ? 'labeled' : 'labeled'
                             }`}
                         >
-                            <Button
+                            <BookingButton
                                 type="p"
                                 date={date}
                                 partOfDay={1}
                                 bookings={parkingBookingsPart1}
                             />
-                            <Button
+                            <BookingButton
                                 type="p"
                                 date={date}
                                 partOfDay={2}

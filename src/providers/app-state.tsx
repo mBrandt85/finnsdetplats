@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useReducer } from 'react';
 import { User } from 'firebase/auth';
-import { LightMode } from '../components/darkmode';
+import { LightMode } from '../components/DarkMode';
 
 interface AppStateContext {
     user: User | null;
@@ -47,7 +47,7 @@ export interface Booking {
     date: string;
     type: 'd' | 'p';
     uid: string;
-    currentLocation: string;
+    location: string;
     displayName: string;
     photoURL: string;
     partOfDay?: number;

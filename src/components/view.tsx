@@ -12,14 +12,13 @@ import styled from 'styled-components';
 import { auth, firestore } from '../firebase';
 import { Booking, useAppState } from '../providers/app-state';
 import { fadeIn } from '../utils/keyframes';
-import Card from './card';
 import Loading from './loading';
-import Navigate from './navigate';
-import NotOk from './not-ok';
-import DarkMode from './darkmode';
+import NotOk from './NotOk';
+import DarkMode from './DarkMode';
+import UserBadge from './UserBadge';
 import Background from './background';
-import UserBadge from './userInfo';
-
+import Card from './card';
+import Navigate from './navigate';
 const Container = styled.div`
     margin: 0 auto;
     width: 100%;
@@ -131,7 +130,12 @@ export default function View() {
         lightmode,
     } = useAppState();
     const [loading, setLoading] = useState<boolean>(true);
+    const [numOfParkingSpots, setNumOfParkingSpots] = useState(0);
+    const [numOfSeats, setNumOfSeats] = useState(0);
+    const [defaultSelectValue, setDefaultSelectValue] = useState('');
     const [clicks, setClicks] = useState<number>(0);
+
+    const uid = user?.uid ? user.uid : 'default';
 
     const logout = async () => {
         await signOut(auth);
@@ -139,16 +143,29 @@ export default function View() {
     };
 
     async function fetchDefaultLocation() {
-        const uid = user?.uid ? user.uid : 'default';
         const docRef = doc(firestore, 'employeeDefaultLocations', uid);
-
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            await setDefaultLocation(docSnap.data().location);
+            setDefaultLocation(docSnap.data().location);
+            setCurrentLocation(docSnap.data().location);
+            setDefaultSelectValue(docSnap.data().location);
         } else {
             console.log('No such document!');
         }
+    }
+
+    async function fetchLocation(location: string) {
+        const docRef = doc(firestore, 'locations', location);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            setNumOfParkingSpots(docSnap.data().parkings);
+            setNumOfSeats(docSnap.data().seats);
+        }
+
+        console.log('Seats: ', numOfSeats);
+        console.log('Parkings: ', numOfParkingSpots);
     }
 
     useEffect(() => {
@@ -161,12 +178,15 @@ export default function View() {
     }, [clicks]);
 
     useEffect(() => {
+        console.log('Fetchings bookings...');
+
         let unsub: Unsubscribe;
         setLoading(true);
         try {
             unsub = onSnapshot(
                 query(
                     collection(firestore, 'bookings'),
+                    where('location', '==', 'Luleå'),
                     where('date', '>=', week[0].date),
                     where('date', '<=', week[6].date)
                 ),
@@ -192,7 +212,6 @@ export default function View() {
     }, [week]);
 
     if (loading) return <Loading text="Hämtar bokningar..." />;
-
     if (!user) return <NotOk />;
 
     return (
@@ -208,8 +227,12 @@ export default function View() {
                         <select
                             id="select-town"
                             name="select-town"
-                            defaultValue={defaultLocation}
-                            onChange={(e) => setCurrentLocation(e.target.value)}
+                            value={defaultSelectValue}
+                            onChange={(e) => {
+                                setDefaultSelectValue(e.target.value);
+                                setCurrentLocation(e.target.value);
+                                fetchLocation(e.target.value);
+                            }}
                         >
                             {locations.map((item, index) => (
                                 <option key={index} value={item.value}>
@@ -225,6 +248,7 @@ export default function View() {
                                 setClicks={setClicks}
                                 name={user!.displayName!.split(' ')[0]}
                                 defaultLocation={defaultLocation}
+                                fetchLocation={fetchLocation}
                                 photoUrl={user!.photoURL!}
                             />
                         </div>
@@ -235,6 +259,8 @@ export default function View() {
                         return (
                             <div key={idx}>
                                 <Card
+                                    numOfSeats={numOfSeats}
+                                    numOfParkingSpots={numOfParkingSpots}
                                     key={idx}
                                     date={date}
                                     bookings={bookings.filter(

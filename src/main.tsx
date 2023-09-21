@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-
 import {
     GoogleAuthProvider,
     onAuthStateChanged,
     signInWithPopup,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-
 import Loading from './components/loading';
-import NotOk from './components/not-ok';
+import NotOk from './components/NotOk';
 import View from './components/view';
 import { auth } from './firebase';
 import './index.css';

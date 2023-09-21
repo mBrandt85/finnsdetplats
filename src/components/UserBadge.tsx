@@ -1,11 +1,9 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Modal from './modal';
 import { useAppState } from '../providers/app-state';
-import { doc, setDoc } from 'firebase/firestore';
-import { firestore } from '../firebase';
 
 const Container = styled.div`
     display: flex;
@@ -59,33 +57,22 @@ export default function UserBadge(props: {
     photoUrl: string;
     clicks: number;
     setClicks: React.Dispatch<React.SetStateAction<number>>;
+    fetchLocation: (location: string) => void;
 }) {
     const [modal, setModal] = useState<boolean>(false);
     const [selectedLocation, setSelectedLocation] = useState('');
-    const { user, defaultLocation, setDefaultLocation } = useAppState();
+    const { defaultLocation, setDefaultLocation } = useAppState();
     const options = [
         { value: 'Luleå', text: 'Luleå' },
         { value: 'Umeå', text: 'Umeå' },
         { value: 'Östersund', text: 'Östersund' },
     ];
 
-    async function updateDefaultLocation() {
-        const uid = user?.uid ? user.uid : 'default';
-        const docRef = doc(firestore, 'employeeDefaultLocations', uid);
-
-        await setDoc(docRef, { location: defaultLocation });
-    }
-
-    useEffect(() => {
-        updateDefaultLocation();
-    }, [defaultLocation]);
-
     return (
         <>
             <Container>
                 <img
                     src={props.photoUrl}
-                    alt={'' /*user!.displayName!*/}
                     onClick={() => props.setClicks(props.clicks + 1)}
                 />
                 <p>{props.name},</p>
@@ -127,6 +114,7 @@ export default function UserBadge(props: {
                         <Button
                             onClick={() => {
                                 setDefaultLocation(selectedLocation);
+                                props.fetchLocation(selectedLocation);
                                 setModal(!modal);
                             }}
                         >

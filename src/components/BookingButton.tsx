@@ -90,7 +90,12 @@ interface Doc {
     partOfDay?: number;
 }
 
-export default function Button({ type, date, bookings, partOfDay }: Props) {
+export default function BookingButton({
+    type,
+    date,
+    bookings,
+    partOfDay,
+}: Props) {
     const { user, lightmode } = useAppState();
     const { uid, displayName, photoURL } = user!;
     const [loading, setLoading] = useState<boolean>(false);

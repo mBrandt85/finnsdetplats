@@ -30,6 +30,7 @@ service cloud.firestore {
 
       allow read: if isAuth();
       allow create: if canCreate();
+      allow update: if true;
       allow delete: if canDelete();
     }
 
@@ -43,7 +44,7 @@ service cloud.firestore {
       }
 
       allow read, create: if isAuth();
-      allow write: if canWrite();
+      allow write, update: if canWrite();
     }
   }
 }
