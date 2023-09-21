@@ -1,10 +1,12 @@
 import { createContext, ReactNode, useContext, useReducer } from 'react';
 import { User } from 'firebase/auth';
-import { LightMode } from '../components/DarkMode';
+import { LightMode } from '../components/darkmode';
 
 interface AppStateContext {
     user: User | null;
     week: Day[];
+    numOfSeats: number;
+    numOfParkingSpots: number;
     locations: Location[];
     currentLocation: string;
     defaultLocation: string;
@@ -13,6 +15,8 @@ interface AppStateContext {
     setUser: (payload: User) => void;
     clearUser: () => void;
     setWeek: (payload: Day[]) => void;
+    setNumOfSeats: (payload: number) => void;
+    setNumOfParkingSpots: (payload: number) => void;
     setCurrentLocation: (payload: string) => void;
     setDefaultLocation: (payload: string) => void;
     addBooking: (payload: Booking) => void;
@@ -25,6 +29,8 @@ interface AppStateAction {
         | 'SET_USER'
         | 'CLEAR_USER'
         | 'SET_WEEK'
+        | 'SET_NUM_OF_SEATS'
+        | 'SET_NUM_OF_PARKING_SPOTS'
         | 'SET_LOCATION'
         | 'SET_DEFAULT_LOCATION'
         | 'ADD_BOOKING'
@@ -77,6 +83,18 @@ const reducer = (
                 bookings: [],
             };
 
+        case 'SET_NUM_OF_SEATS':
+            return {
+                ...state,
+                numOfSeats: action.payload,
+            };
+
+        case 'SET_NUM_OF_PARKING_SPOTS':
+            return {
+                ...state,
+                numOfParkingSpots: action.payload,
+            };
+
         case 'SET_LOCATION':
             return {
                 ...state,
@@ -123,6 +141,10 @@ export default function AppStateProvider({
     const setUser = (payload: User) => dispatch({ type: 'SET_USER', payload });
     const clearUser = () => dispatch({ type: 'CLEAR_USER' });
     const setWeek = (payload: Day[]) => dispatch({ type: 'SET_WEEK', payload });
+    const setNumOfSeats = (payload: number) =>
+        dispatch({ type: 'SET_NUM_OF_SEATS', payload });
+    const setNumOfParkingSpots = (payload: number) =>
+        dispatch({ type: 'SET_NUM_OF_PARKING_SPOTS', payload });
     const setCurrentLocation = (payload: string) =>
         dispatch({ type: 'SET_LOCATION', payload });
     const setDefaultLocation = (payload: string) =>
@@ -139,18 +161,22 @@ export default function AppStateProvider({
     const [state, dispatch] = useReducer(reducer, {
         user: null,
         week: [],
+        numOfSeats: 0,
+        numOfParkingSpots: 0,
         locations: [
             { value: 'Luleå', text: 'Luleå' },
             { value: 'Umeå', text: 'Umeå' },
             { value: 'Östersund', text: 'Östersund' },
         ],
-        currentLocation: { location: '' },
-        defaultLocation: { location: '' },
+        currentLocation: '',
+        defaultLocation: '',
         bookings: [],
         lightmode: (localStorage.getItem('lightmode') as LightMode) ?? 'light',
         setUser,
         clearUser,
         setWeek,
+        setNumOfSeats,
+        setNumOfParkingSpots,
         setCurrentLocation,
         setDefaultLocation,
         addBooking,

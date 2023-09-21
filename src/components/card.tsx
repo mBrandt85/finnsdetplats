@@ -22,8 +22,6 @@ interface Styled {
 
 interface Props extends Styled {
     bookings: Booking[];
-    numOfSeats: number;
-    numOfParkingSpots: number;
 }
 
 const Wrapper = styled.div<Styled>`
@@ -228,7 +226,7 @@ export default function Card({ date, bookings }: Props) {
         ({ partOfDay }) => partOfDay === 2
     );
 
-    const { lightmode, currentLocation } = useAppState();
+    const { lightmode } = useAppState();
 
     useForceUpdateInterval({ seconds: 10 }); // Makes sure "Today" stays fresh when window is open over several days
 

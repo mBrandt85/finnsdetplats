@@ -88,6 +88,7 @@ interface Doc {
     displayName: string | null;
     photoURL: string | null;
     partOfDay?: number;
+    location: string;
 }
 
 export default function BookingButton({
@@ -96,12 +97,14 @@ export default function BookingButton({
     bookings,
     partOfDay,
 }: Props) {
-    const { user, lightmode } = useAppState();
+    const { user, lightmode, numOfParkingSpots, numOfSeats, currentLocation } =
+        useAppState();
     const { uid, displayName, photoURL } = user!;
     const [loading, setLoading] = useState<boolean>(false);
     const [button, setButton] = useState<'passed' | 'free' | 'full' | 'check'>(
         'free'
     );
+    const location = currentLocation;
     const booked = bookings.filter(
         (booking) => booking.date === date && booking.type === type
     );
@@ -110,17 +113,20 @@ export default function BookingButton({
         type === 'd'
             ? !(date <= '2022-06-12' || date >= '2022-07-06')
                 ? 5
-                : 8
-            : 3;
+                : numOfSeats
+            : numOfParkingSpots;
 
     const handleAdd = async () => {
         setLoading(true);
+        console.log(location);
+
         const doc: Doc = {
             date,
             type,
             uid,
             displayName,
             photoURL,
+            location,
         };
         if (partOfDay) doc.partOfDay = partOfDay;
         await addDoc(collection(firestore, 'bookings'), doc);

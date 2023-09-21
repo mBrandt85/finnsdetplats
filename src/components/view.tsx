@@ -14,7 +14,7 @@ import { Booking, useAppState } from '../providers/app-state';
 import { fadeIn } from '../utils/keyframes';
 import Loading from './loading';
 import NotOk from './NotOk';
-import DarkMode from './DarkMode';
+import DarkMode from './darkmode';
 import UserBadge from './UserBadge';
 import Background from './background';
 import Card from './card';
@@ -120,7 +120,12 @@ export default function View() {
         user,
         clearUser,
         week,
+        numOfSeats,
+        numOfParkingSpots,
+        setNumOfSeats,
+        setNumOfParkingSpots,
         locations,
+        currentLocation,
         setCurrentLocation,
         defaultLocation,
         setDefaultLocation,
@@ -130,9 +135,6 @@ export default function View() {
         lightmode,
     } = useAppState();
     const [loading, setLoading] = useState<boolean>(true);
-    const [numOfParkingSpots, setNumOfParkingSpots] = useState(0);
-    const [numOfSeats, setNumOfSeats] = useState(0);
-    const [defaultSelectValue, setDefaultSelectValue] = useState('');
     const [clicks, setClicks] = useState<number>(0);
 
     const uid = user?.uid ? user.uid : 'default';
@@ -149,7 +151,7 @@ export default function View() {
         if (docSnap.exists()) {
             setDefaultLocation(docSnap.data().location);
             setCurrentLocation(docSnap.data().location);
-            setDefaultSelectValue(docSnap.data().location);
+            fetchLocation(docSnap.data().location);
         } else {
             console.log('No such document!');
         }
@@ -186,7 +188,7 @@ export default function View() {
             unsub = onSnapshot(
                 query(
                     collection(firestore, 'bookings'),
-                    where('location', '==', 'Luleå'),
+                    where('location', '==', currentLocation),
                     where('date', '>=', week[0].date),
                     where('date', '<=', week[6].date)
                 ),
@@ -211,6 +213,10 @@ export default function View() {
         // eslint-disable-next-line
     }, [week]);
 
+    useEffect(() => {
+        console.log('Current location: ', currentLocation);
+    }, [currentLocation]);
+
     if (loading) return <Loading text="Hämtar bokningar..." />;
     if (!user) return <NotOk />;
 
@@ -227,9 +233,8 @@ export default function View() {
                         <select
                             id="select-town"
                             name="select-town"
-                            value={defaultSelectValue}
+                            value={currentLocation}
                             onChange={(e) => {
-                                setDefaultSelectValue(e.target.value);
                                 setCurrentLocation(e.target.value);
                                 fetchLocation(e.target.value);
                             }}
@@ -259,8 +264,6 @@ export default function View() {
                         return (
                             <div key={idx}>
                                 <Card
-                                    numOfSeats={numOfSeats}
-                                    numOfParkingSpots={numOfParkingSpots}
                                     key={idx}
                                     date={date}
                                     bookings={bookings.filter(
