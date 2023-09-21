@@ -57,11 +57,11 @@ export default function UserBadge(props: {
     photoUrl: string;
     clicks: number;
     setClicks: React.Dispatch<React.SetStateAction<number>>;
-    fetchLocation: (location: string) => void;
 }) {
     const [modal, setModal] = useState<boolean>(false);
     const [selectedLocation, setSelectedLocation] = useState('');
-    const { defaultLocation, setDefaultLocation } = useAppState();
+    const { defaultLocation, setDefaultLocation, setCurrentLocation } =
+        useAppState();
     const options = [
         { value: 'Luleå', text: 'Luleå' },
         { value: 'Umeå', text: 'Umeå' },
@@ -114,7 +114,7 @@ export default function UserBadge(props: {
                         <Button
                             onClick={() => {
                                 setDefaultLocation(selectedLocation);
-                                props.fetchLocation(selectedLocation);
+                                setCurrentLocation(selectedLocation);
                                 setModal(!modal);
                             }}
                         >

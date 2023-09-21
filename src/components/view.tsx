@@ -19,6 +19,7 @@ import UserBadge from './UserBadge';
 import Background from './background';
 import Card from './card';
 import Navigate from './navigate';
+
 const Container = styled.div`
     margin: 0 auto;
     width: 100%;
@@ -256,7 +257,6 @@ export default function View() {
                                 setClicks={setClicks}
                                 name={user!.displayName!.split(' ')[0]}
                                 defaultLocation={defaultLocation}
-                                fetchLocation={fetchLocation}
                                 photoUrl={user!.photoURL!}
                             />
                         </div>
