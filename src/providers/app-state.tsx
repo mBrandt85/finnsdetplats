@@ -21,6 +21,7 @@ interface AppStateContext {
     setDefaultLocation: (payload: string) => void;
     addBooking: (payload: Booking) => void;
     removeBooking: (payload: string) => void;
+    clearBookings: () => void;
     setLightMode: (payload: LightMode) => void;
 }
 
@@ -35,6 +36,7 @@ interface AppStateAction {
         | 'SET_DEFAULT_LOCATION'
         | 'ADD_BOOKING'
         | 'REMOVE_BOOKING'
+        | 'CLEAR_BOOKINGS'
         | 'SET_LIGHTMODE';
     payload?: any;
 }
@@ -120,6 +122,13 @@ const reducer = (
                     ({ id }) => id !== action.payload
                 ),
             };
+
+        case 'CLEAR_BOOKINGS':
+            return {
+                ...state,
+                bookings: [],
+            };
+
         case 'SET_LIGHTMODE':
             return {
                 ...state,
@@ -153,6 +162,7 @@ export default function AppStateProvider({
         dispatch({ type: 'ADD_BOOKING', payload });
     const removeBooking = (payload: string) =>
         dispatch({ type: 'REMOVE_BOOKING', payload });
+    const clearBookings = () => dispatch({ type: 'CLEAR_BOOKINGS' });
     const setLightMode = (payload: LightMode) => {
         localStorage.setItem('lightmode', payload);
         return dispatch({ type: 'SET_LIGHTMODE', payload });
@@ -181,6 +191,7 @@ export default function AppStateProvider({
         setDefaultLocation,
         addBooking,
         removeBooking,
+        clearBookings,
         setLightMode,
     });
 

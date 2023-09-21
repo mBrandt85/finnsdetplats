@@ -132,6 +132,7 @@ export default function View() {
         bookings,
         addBooking,
         removeBooking,
+        clearBookings,
         lightmode,
     } = useAppState();
     const [loading, setLoading] = useState<boolean>(true);
@@ -180,10 +181,12 @@ export default function View() {
     }, [clicks]);
 
     useEffect(() => {
-        console.log('Fetchings bookings...');
+        clearBookings();
 
         let unsub: Unsubscribe;
+
         setLoading(true);
+
         try {
             unsub = onSnapshot(
                 query(
@@ -211,7 +214,7 @@ export default function View() {
 
         return () => unsub && unsub();
         // eslint-disable-next-line
-    }, [week]);
+    }, [week, currentLocation]);
 
     useEffect(() => {
         console.log('Current location: ', currentLocation);
