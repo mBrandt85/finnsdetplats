@@ -4,6 +4,8 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Modal from './modal';
 import { useAppState } from '../providers/app-state';
+import { doc, setDoc } from 'firebase/firestore';
+import { firestore } from '../firebase';
 
 const Container = styled.div`
     display: flex;
@@ -59,14 +61,34 @@ export default function UserBadge(props: {
     setClicks: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const [modal, setModal] = useState<boolean>(false);
-    const [selectedLocation, setSelectedLocation] = useState('');
-    const { defaultLocation, setDefaultLocation, setCurrentLocation } =
+    const [loading, setLoading] = useState<boolean>(false);
+    const { user, defaultLocation, setDefaultLocation, setCurrentLocation } =
         useAppState();
+    const [selectedLocation, setSelectedLocation] = useState(
+        defaultLocation ? defaultLocation : 'Luleå'
+    );
     const options = [
         { value: 'Luleå', text: 'Luleå' },
         { value: 'Umeå', text: 'Umeå' },
         { value: 'Östersund', text: 'Östersund' },
     ];
+
+    async function handleChangeDefaultLocation() {
+        setLoading(true);
+
+        await setDoc(
+            doc(
+                firestore,
+                'employeeDefaultLocations',
+                user?.uid ? user.uid : 'id'
+            ),
+            {
+                location: selectedLocation,
+            }
+        );
+
+        setLoading(false);
+    }
 
     return (
         <>
@@ -115,6 +137,7 @@ export default function UserBadge(props: {
                             onClick={() => {
                                 setDefaultLocation(selectedLocation);
                                 setCurrentLocation(selectedLocation);
+                                handleChangeDefaultLocation();
                                 setModal(!modal);
                             }}
                         >

@@ -156,6 +156,8 @@ export default function View() {
             fetchLocation(docSnap.data().location);
         } else {
             console.log('No such document!');
+            setCurrentLocation('Luleå');
+            fetchLocation('Luleå');
         }
     }
 
