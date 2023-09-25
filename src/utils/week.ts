@@ -115,3 +115,8 @@ export function parseMonth(d: string): string {
       return 'januari';
   }
 }
+
+export function monthNum(d: string): number {
+  const date = new Date(d);
+  return date.getMonth() + 1;
+}

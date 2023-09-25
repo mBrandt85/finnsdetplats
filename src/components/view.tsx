@@ -1,10 +1,11 @@
-import { signOut, Unsubscribe } from 'firebase/auth';
+import { signOut, Unsubscribe, User } from 'firebase/auth';
 import {
     collection,
     doc,
     getDoc,
     onSnapshot,
     query,
+    setDoc,
     where,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ import UserBadge from './UserBadge';
 import Background from './background';
 import Card from './card';
 import Navigate from './navigate';
+import Modal from './modal';
 
 const Container = styled.div`
     margin: 0 auto;
@@ -116,6 +118,47 @@ const Container = styled.div`
     }
 `;
 
+const Button = styled.div`
+    background-color: rgb(6, 155, 229);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    width: fit-content;
+    color: white;
+`;
+
+const ModalContainer = styled.div`
+    margin-top: 1rem;
+
+    > p {
+        font-size: 0.85rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    > div {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        > select {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            height: 2rem;
+        }
+    }
+`;
+
+export async function handleChangeDefaultLocation(
+    user: User | null,
+    selectedLocation: string
+) {
+    await setDoc(
+        doc(firestore, 'employeeDefaultLocations', user?.uid ? user.uid : 'id'),
+        {
+            location: selectedLocation,
+        }
+    );
+}
+
 export default function View() {
     const {
         user,
@@ -138,7 +181,16 @@ export default function View() {
     } = useAppState();
     const [loading, setLoading] = useState<boolean>(true);
     const [clicks, setClicks] = useState<number>(0);
+    const [modal, setModal] = useState<boolean>(false);
+    const [selectedLocation, setSelectedLocation] = useState(
+        defaultLocation ? defaultLocation : 'Luleå'
+    );
 
+    const options = [
+        { value: 'Luleå', text: 'Luleå' },
+        { value: 'Umeå', text: 'Umeå' },
+        { value: 'Östersund', text: 'Östersund' },
+    ];
     const uid = user?.uid ? user.uid : 'default';
 
     const logout = async () => {
@@ -158,6 +210,7 @@ export default function View() {
             console.log('No such document!');
             setCurrentLocation('Luleå');
             fetchLocation('Luleå');
+            setModal(true);
         }
     }
 
@@ -287,6 +340,54 @@ export default function View() {
 
                 <Navigate />
             </Container>
+            {modal && (
+                <Modal
+                    close={() => setModal(!modal)}
+                    isDefaultLocationModal={true}
+                >
+                    <header>
+                        <h1>Välj ordinarie ort</h1>
+                    </header>
+                    <ModalContainer>
+                        <p>
+                            Här väljer du den ort du är placerad på för att
+                            bestämma vilken startort du har på Boka Plats. Du
+                            kan fortfarande boka platser på andra kontor.
+                        </p>
+                        <div>
+                            <select
+                                id="select-town"
+                                name="select-town"
+                                defaultValue={defaultLocation}
+                                onChange={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setSelectedLocation(e.target.value);
+                                }}
+                            >
+                                {options.map((item, index) => (
+                                    <option key={index} value={item.value}>
+                                        {item.text}
+                                    </option>
+                                ))}
+                            </select>
+                            <Button
+                                onClick={() => {
+                                    setDefaultLocation(selectedLocation);
+                                    setCurrentLocation(selectedLocation);
+                                    handleChangeDefaultLocation(
+                                        user,
+                                        selectedLocation
+                                    );
+                                    setModal(!modal);
+                                }}
+                            >
+                                Välj
+                            </Button>
+                        </div>
+                    </ModalContainer>
+                </Modal>
+            )}
         </>
     );
 }

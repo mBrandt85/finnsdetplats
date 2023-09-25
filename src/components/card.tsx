@@ -8,6 +8,7 @@ import { fadeIn } from '../utils/keyframes';
 import {
     hasPassed,
     isToday,
+    monthNum,
     parseDate,
     parseDay,
     parseMonth,
@@ -208,6 +209,12 @@ const Main = styled.main`
     }
 `;
 
+const ModalTitle = styled.h1`
+    &:first-letter {
+        text-transform: uppercase;
+    }
+`;
+
 export default function Card({ date, bookings }: Props) {
     const [modal, setModal] = useState<boolean>(false);
 
@@ -296,13 +303,13 @@ export default function Card({ date, bookings }: Props) {
                         isDefaultLocationModal={false}
                     >
                         <header>
-                            <h1>
+                            <ModalTitle>
                                 {parseDay(date) +
-                                    ' ' +
+                                    ', ' +
                                     parseDate(date) +
                                     ' ' +
-                                    parseMonth(date)}
-                            </h1>
+                                    monthNum(date)}
+                            </ModalTitle>
                         </header>
 
                         <Main>

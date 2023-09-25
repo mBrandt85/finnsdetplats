@@ -41,15 +41,23 @@ const Button = styled.div`
 `;
 
 const ModalContainer = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
     margin-top: 1rem;
 
-    > select {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        height: 2rem;
+    > p {
+        font-size: 0.85rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    > div {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        > select {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            height: 2rem;
+        }
     }
 `;
 
@@ -117,6 +125,11 @@ export default function UserBadge(props: {
                         <h1>Byt ordinarie ort</h1>
                     </header>
                     <ModalContainer>
+                        <p>
+                            Här väljer du den ort du är placerad på för att
+                            bestämma vilken startort du har på Boka Plats. Du
+                            kan fortfarande boka platser på andra kontor.
+                        </p>
                         <select
                             id="select-town"
                             name="select-town"
