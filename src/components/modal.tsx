@@ -27,7 +27,7 @@ const Backdrop = styled.div`
 const Content = styled.div`
     position: relative;
     width: 100%;
-    overflow-y: scroll;
+    overflow-y: hidden;
     max-width: 24rem;
     max-height: 36rem;
     padding: 1rem;
