@@ -147,6 +147,13 @@ const ModalContainer = styled.div`
     }
 `;
 
+const Label = styled.label`
+    &.dark {
+        color: white;
+    }
+    color: black;
+`;
+
 export async function handleChangeDefaultLocation(
     user: User | null,
     selectedLocation: string
@@ -286,7 +293,9 @@ export default function View() {
                 <header>
                     <h1>Boka plats</h1>
                     <div className="select-label-container">
-                        <label htmlFor="select-town">Välj stad</label>
+                        <Label className={lightmode} htmlFor="select-town">
+                            Välj stad
+                        </Label>
                     </div>
                     <div className="buttons">
                         <select
