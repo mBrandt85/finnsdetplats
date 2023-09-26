@@ -33,7 +33,7 @@ const Container = styled.div<Styled>`
     }
 
     display: flex;
-    padding: 0.4rem;
+    padding: 0.6rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -79,6 +79,7 @@ const Text = styled.span<{ date: string; trigger?: boolean }>`
 
 const ButtonLabel = styled.span`
     font-weight: 500;
+    font-size: 0.8rem;
 `;
 
 interface Doc {
@@ -118,7 +119,6 @@ export default function BookingButton({
 
     const handleAdd = async () => {
         setLoading(true);
-
         const doc: Doc = {
             date,
             type,
