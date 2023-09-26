@@ -171,8 +171,6 @@ export default function View() {
         user,
         clearUser,
         week,
-        numOfSeats,
-        numOfParkingSpots,
         setNumOfSeats,
         setNumOfParkingSpots,
         locations,

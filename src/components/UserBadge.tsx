@@ -70,7 +70,6 @@ export default function UserBadge(props: {
     setClicks: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const [modal, setModal] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
     const { user, defaultLocation, setDefaultLocation, setCurrentLocation } =
         useAppState();
     const [selectedLocation, setSelectedLocation] = useState(
@@ -83,8 +82,6 @@ export default function UserBadge(props: {
     ];
 
     async function handleChangeDefaultLocation() {
-        setLoading(true);
-
         await setDoc(
             doc(
                 firestore,
@@ -95,8 +92,6 @@ export default function UserBadge(props: {
                 location: selectedLocation,
             }
         );
-
-        setLoading(false);
     }
 
     return (
