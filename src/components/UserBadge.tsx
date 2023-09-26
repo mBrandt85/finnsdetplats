@@ -8,6 +8,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
 
 const Container = styled.div`
+    cursor: pointer;
     display: flex;
     gap: 0.5rem;
     align-items: center;
@@ -100,7 +101,7 @@ export default function UserBadge(props: {
 
     return (
         <>
-            <Container>
+            <Container onClick={() => setModal(!modal)}>
                 <img
                     src={props.photoUrl}
                     onClick={() => props.setClicks(props.clicks + 1)}
@@ -113,7 +114,6 @@ export default function UserBadge(props: {
                     icon={faPen}
                     size="2xs"
                     style={{ color: '#049be5' }}
-                    onClick={() => setModal(!modal)}
                 />
             </Container>
             {modal && (
