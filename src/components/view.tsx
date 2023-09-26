@@ -140,12 +140,11 @@ const ModalContainer = styled.div`
         display: flex;
         align-items: center;
         gap: 1rem;
-        > select {
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
-            height: 2rem;
-        }
     }
+`;
+
+const Select = styled.select`
+    box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
 `;
 
 const Label = styled.label`
@@ -294,7 +293,7 @@ export default function View() {
                         </Label>
                     </div>
                     <div className="buttons">
-                        <select
+                        <Select
                             id="select-town"
                             name="select-town"
                             value={currentLocation}
@@ -308,7 +307,7 @@ export default function View() {
                                     {item.text}
                                 </option>
                             ))}
-                        </select>
+                        </Select>
 
                         <div className="rightButtons">
                             <DarkMode />
