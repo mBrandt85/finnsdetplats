@@ -129,32 +129,34 @@ export default function UserBadge(props: {
                             Välj din placeringsort. Du kan fortfarande boka
                             platser på andra kontor.
                         </p>
-                        <select
-                            id="select-town"
-                            name="select-town"
-                            defaultValue={defaultLocation}
-                            onChange={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setSelectedLocation(e.target.value);
-                            }}
-                        >
-                            {options.map((item, index) => (
-                                <option key={index} value={item.value}>
-                                    {item.text}
-                                </option>
-                            ))}
-                        </select>
-                        <Button
-                            onClick={() => {
-                                setDefaultLocation(selectedLocation);
-                                setCurrentLocation(selectedLocation);
-                                handleChangeDefaultLocation();
-                                setModal(!modal);
-                            }}
-                        >
-                            Välj
-                        </Button>
+                        <div>
+                            <select
+                                id="select-town"
+                                name="select-town"
+                                defaultValue={defaultLocation}
+                                onChange={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setSelectedLocation(e.target.value);
+                                }}
+                            >
+                                {options.map((item, index) => (
+                                    <option key={index} value={item.value}>
+                                        {item.text}
+                                    </option>
+                                ))}
+                            </select>
+                            <Button
+                                onClick={() => {
+                                    setDefaultLocation(selectedLocation);
+                                    setCurrentLocation(selectedLocation);
+                                    handleChangeDefaultLocation();
+                                    setModal(!modal);
+                                }}
+                            >
+                                Välj
+                            </Button>
+                        </div>
                     </ModalContainer>
                 </Modal>
             )}
