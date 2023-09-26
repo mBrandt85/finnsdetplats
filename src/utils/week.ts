@@ -13,6 +13,29 @@ export function getWeek(date: Date = new Date()): Day[] {
   return week;
 }
 
+export function getISOWeek(inputDate: string): number {
+  // Get the current date if no input date is provided
+  const currentDate = new Date(inputDate);
+  
+  // Find the Thursday of the current week
+  const tempDate = new Date(currentDate);
+  tempDate.setDate(tempDate.getDate() + 3 - (tempDate.getDay() + 6) % 7);
+  
+  // Get the year and month of the Thursday
+  const year = tempDate.getFullYear();
+  
+  // Find the first Thursday of the year
+  const firstThursday = new Date(year, 0, 4);
+  firstThursday.setDate(firstThursday.getDate() + 3 - (firstThursday.getDay() + 6) % 7);
+  
+  // Calculate the week number based on the Thursday of the current week
+  const weekNumber = Math.floor(
+    (tempDate.getTime() - firstThursday.getTime()) / (7 * 24 * 60 * 60 * 1000) + 1
+  );
+  
+  return weekNumber;
+}
+
 export function lastWeek(d: string): Day[] {
   const date = new Date(d);
   date.setDate(date.getDate() - 1);

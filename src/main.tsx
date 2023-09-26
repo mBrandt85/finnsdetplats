@@ -7,9 +7,9 @@ import {
     signInWithPopup,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import Loading from './components/loading';
+import Loading from './components/Loading';
 import NotOk from './components/NotOk';
-import View from './components/view';
+import View from './components/View';
 import { auth } from './firebase';
 import './index.css';
 import Providers from './providers';

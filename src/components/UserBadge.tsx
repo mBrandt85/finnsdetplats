@@ -2,7 +2,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import styled from 'styled-components';
-import Modal from './modal';
+import Modal from './Modal';
 import { useAppState } from '../providers/app-state';
 import { doc, setDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
@@ -126,9 +126,8 @@ export default function UserBadge(props: {
                     </header>
                     <ModalContainer>
                         <p>
-                            Här väljer du den ort du är placerad på för att
-                            bestämma vilken startort du har på Boka Plats. Du
-                            kan fortfarande boka platser på andra kontor.
+                            Välj din placeringsort. Du kan fortfarande boka
+                            platser på andra kontor.
                         </p>
                         <select
                             id="select-town"

@@ -118,7 +118,6 @@ export default function BookingButton({
 
     const handleAdd = async () => {
         setLoading(true);
-        console.log(location);
 
         const doc: Doc = {
             date,

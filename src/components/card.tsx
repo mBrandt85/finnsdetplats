@@ -14,7 +14,7 @@ import {
     parseMonth,
 } from '../utils/week';
 import BookingButton from './BookingButton';
-import Modal from './modal';
+import Modal from './Modal';
 import useForceUpdateInterval from '../hooks/useForceUpdateInterval';
 
 interface Styled {

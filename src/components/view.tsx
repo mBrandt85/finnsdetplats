@@ -13,14 +13,15 @@ import styled from 'styled-components';
 import { auth, firestore } from '../firebase';
 import { Booking, useAppState } from '../providers/app-state';
 import { fadeIn } from '../utils/keyframes';
-import Loading from './loading';
+import Loading from './Loading';
 import NotOk from './NotOk';
-import DarkMode from './darkmode';
+import DarkMode from './DarkMode';
 import UserBadge from './UserBadge';
-import Background from './background';
-import Card from './card';
-import Navigate from './navigate';
-import Modal from './modal';
+import Background from './Background';
+import Card from './Card';
+import Navigate from './Navigate';
+import Modal from './Modal';
+import { getISOWeek, isWeekend } from '../utils/week';
 
 const Container = styled.div`
     margin: 0 auto;
@@ -131,7 +132,7 @@ const ModalContainer = styled.div`
 
     > p {
         font-size: 0.85rem;
-        margin-right: 1rem;
+        margin-right: 3rem;
         margin-bottom: 1rem;
     }
 
@@ -229,9 +230,6 @@ export default function View() {
             setNumOfParkingSpots(docSnap.data().parkings);
             setNumOfSeats(docSnap.data().seats);
         }
-
-        console.log('Seats: ', numOfSeats);
-        console.log('Parkings: ', numOfParkingSpots);
     }
 
     useEffect(() => {
@@ -279,10 +277,6 @@ export default function View() {
         // eslint-disable-next-line
     }, [week, currentLocation]);
 
-    useEffect(() => {
-        console.log('Current location: ', currentLocation);
-    }, [currentLocation]);
-
     if (loading) return <Loading text="Hämtar bokningar..." />;
     if (!user) return <NotOk />;
 
@@ -291,7 +285,9 @@ export default function View() {
             <Background />
             <Container>
                 <header>
-                    <h1>Boka plats</h1>
+                    <h1>
+                        {currentLocation}, vecka {getISOWeek(week[0].date)}
+                    </h1>
                     <div className="select-label-container">
                         <Label className={lightmode} htmlFor="select-town">
                             Välj stad
@@ -328,22 +324,19 @@ export default function View() {
                 </header>
                 <main>
                     {week.map(({ date }, idx) => {
-                        return (
-                            <div key={idx}>
-                                <Card
-                                    key={idx}
-                                    date={date}
-                                    bookings={bookings.filter(
-                                        (booking) => booking.date === date
-                                    )}
-                                />
-                                {idx === 4 && (
-                                    <div
-                                        className={`${lightmode} seperator`}
-                                    ></div>
-                                )}
-                            </div>
-                        );
+                        if (!isWeekend(date)) {
+                            return (
+                                <div key={idx}>
+                                    <Card
+                                        key={idx}
+                                        date={date}
+                                        bookings={bookings.filter(
+                                            (booking) => booking.date === date
+                                        )}
+                                    />
+                                </div>
+                            );
+                        }
                     })}
                 </main>
 
@@ -351,7 +344,7 @@ export default function View() {
             </Container>
             {modal && (
                 <Modal
-                    close={() => setModal(!modal)}
+                    close={() => setModal(false)}
                     isDefaultLocationModal={true}
                 >
                     <header>
@@ -359,9 +352,8 @@ export default function View() {
                     </header>
                     <ModalContainer>
                         <p>
-                            Här väljer du den ort du är placerad på för att
-                            bestämma vilken startort du har på Boka Plats. Du
-                            kan fortfarande boka platser på andra kontor.
+                            Välj din placeringsort. Du kan fortfarande boka
+                            platser på andra kontor.
                         </p>
                         <div>
                             <select
@@ -388,7 +380,7 @@ export default function View() {
                                         user,
                                         selectedLocation
                                     );
-                                    setModal(!modal);
+                                    setModal(false);
                                 }}
                             >
                                 Välj
