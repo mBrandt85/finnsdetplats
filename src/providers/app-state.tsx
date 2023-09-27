@@ -4,6 +4,7 @@ import { LightMode } from '../components/DarkMode';
 
 interface AppStateContext {
     user: User | null;
+    hasBookingInOtherOffice: boolean;
     week: Day[];
     numOfSeats: number;
     numOfParkingSpots: number;
@@ -15,6 +16,7 @@ interface AppStateContext {
     setUser: (payload: User) => void;
     clearUser: () => void;
     setWeek: (payload: Day[]) => void;
+    setHasBookingInOtherOffice: (payload: boolean) => void;
     setNumOfSeats: (payload: number) => void;
     setNumOfParkingSpots: (payload: number) => void;
     setCurrentLocation: (payload: string) => void;
@@ -28,6 +30,7 @@ interface AppStateContext {
 interface AppStateAction {
     type:
         | 'SET_USER'
+        | 'SET_HAS_BOOKING_IN_OTHER_OFFICE'
         | 'CLEAR_USER'
         | 'SET_WEEK'
         | 'SET_NUM_OF_SEATS'
@@ -70,6 +73,12 @@ const reducer = (
             return {
                 ...state,
                 user: action.payload as User,
+            };
+
+        case 'SET_HAS_BOOKING_IN_OTHER_OFFICE':
+            return {
+                ...state,
+                hasBookingInOtherOffice: action.payload,
             };
 
         case 'CLEAR_USER':
@@ -148,6 +157,8 @@ export default function AppStateProvider({
     children: ReactNode;
 }) {
     const setUser = (payload: User) => dispatch({ type: 'SET_USER', payload });
+    const setHasBookingInOtherOffice = (payload: boolean) =>
+        dispatch({ type: 'SET_HAS_BOOKING_IN_OTHER_OFFICE', payload });
     const clearUser = () => dispatch({ type: 'CLEAR_USER' });
     const setWeek = (payload: Day[]) => dispatch({ type: 'SET_WEEK', payload });
     const setNumOfSeats = (payload: number) =>
@@ -170,6 +181,7 @@ export default function AppStateProvider({
 
     const [state, dispatch] = useReducer(reducer, {
         user: null,
+        hasBookingInOtherOffice: false,
         week: [],
         numOfSeats: 0,
         numOfParkingSpots: 0,
@@ -185,6 +197,7 @@ export default function AppStateProvider({
         setUser,
         clearUser,
         setWeek,
+        setHasBookingInOtherOffice,
         setNumOfSeats,
         setNumOfParkingSpots,
         setCurrentLocation,

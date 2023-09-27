@@ -1,11 +1,19 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
 import { useAppState } from '../providers/app-state';
-import { doc, setDoc } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    onSnapshot,
+    query,
+    setDoc,
+    where,
+} from 'firebase/firestore';
 import { firestore } from '../firebase';
+import { Unsubscribe } from 'firebase/auth';
 
 const Container = styled.div`
     cursor: pointer;
@@ -70,8 +78,13 @@ export default function UserBadge(props: {
     setClicks: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const [modal, setModal] = useState<boolean>(false);
-    const { user, defaultLocation, setDefaultLocation, setCurrentLocation } =
-        useAppState();
+    const {
+        user,
+        defaultLocation,
+        setDefaultLocation,
+        setCurrentLocation,
+        setHasBookingInOtherOffice,
+    } = useAppState();
     const [selectedLocation, setSelectedLocation] = useState(
         defaultLocation ? defaultLocation : 'Luleå'
     );
@@ -80,6 +93,40 @@ export default function UserBadge(props: {
         { value: 'Umeå', text: 'Umeå' },
         { value: 'Östersund', text: 'Östersund' },
     ];
+
+    function createDateString(inputDate: Date) {
+        const offset = inputDate.getTimezoneOffset();
+        inputDate = new Date(inputDate.getTime() - offset * 60 * 1000);
+        return inputDate.toISOString().split('T')[0];
+    }
+
+    useEffect(() => {
+        let unsub: Unsubscribe;
+        let today = new Date();
+
+        const q = query(
+            collection(firestore, 'bookings'),
+            where('uid', '==', user?.uid),
+            where('date', '>=', createDateString(today))
+        );
+
+        try {
+            unsub = onSnapshot(q, (querySnapshot) => {
+                const result: any = [];
+
+                querySnapshot.forEach((doc) => {
+                    if (doc.data().location !== defaultLocation) {
+                        result.push(doc.data());
+                    }
+                });
+
+                setHasBookingInOtherOffice(result.length > 0);
+            });
+        } catch (e) {}
+
+        return () => unsub && unsub();
+        // eslint-disable-next-line
+    }, [defaultLocation]);
 
     async function handleChangeDefaultLocation() {
         await setDoc(

@@ -224,6 +224,8 @@ export default function View() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
+            setNumOfSeats(0);
+            setNumOfParkingSpots(0);
             setNumOfParkingSpots(docSnap.data().parkings);
             setNumOfSeats(docSnap.data().seats);
         }
