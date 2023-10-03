@@ -54,7 +54,7 @@ export default function CompactBookings(props: { futureBookings: Booking[] }) {
 
     return (
         <Container>
-            <h2>Bokninar på annan ort</h2>
+            <h2>Aktuella bokningar</h2>
             {bookings.length === 0 && (
                 <p className="no-bookings">Inga bokningar</p>
             )}

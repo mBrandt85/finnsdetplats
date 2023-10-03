@@ -34,6 +34,14 @@ const Content = styled.div`
     border-radius: 1rem;
     background-color: white;
 
+    overflow-y: auto; /* Enable vertical scrolling */
+    scrollbar-width: none; /* Hide Firefox scrollbar */
+    -ms-overflow-style: none; /* Hide IE/Edge scrollbar */
+
+    &::-webkit-scrollbar {
+        width: 0; /* Hide Webkit scrollbar */
+    }
+
     & > header > h1 {
         font-family: 'Roboto Condensed', sans-serif;
         font-weight: 400;
