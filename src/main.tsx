@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from 'react';
 import Loading from './components/Loading';
 import NotOk from './components/NotOk';
-import View from './components/View';
+import View from './components/view';
 import { auth } from './firebase';
 import './index.css';
 import Providers from './providers';

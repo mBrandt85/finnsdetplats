@@ -60,12 +60,16 @@ const Button = styled.span<{ next?: boolean; home?: boolean }>`
 `;
 
 export default function Navigate() {
-    const { week, setWeek, lightmode } = useAppState();
+    const { week, setWeek, lightmode, setCurrentLocation, defaultLocation } =
+        useAppState();
     const [show, setShow] = useState<boolean>(false);
 
     const handleLast = () => setWeek(lastWeek(week[0].date));
     const handleNext = () => setWeek(nextWeek(week[6].date));
-    const handleCurrent = () => setWeek(getWeek());
+    const handleCurrent = () => {
+        setCurrentLocation(defaultLocation);
+        setWeek(getWeek());
+    };
 
     useEffect(() => {
         const currentDate = parseFullDate(new Date());
