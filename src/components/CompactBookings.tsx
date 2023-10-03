@@ -14,6 +14,10 @@ const Container = styled.div`
     & > h2 {
         font-size: 1.1rem;
     }
+
+    & > .no-bookings {
+        font-style: italic;
+    }
 `;
 
 const BookingContainer = styled.div`
@@ -51,6 +55,9 @@ export default function CompactBookings(props: { futureBookings: Booking[] }) {
     return (
         <Container>
             <h2>Bokninar på annan ort</h2>
+            {bookings.length === 0 && (
+                <p className="no-bookings">Inga bokningar</p>
+            )}
             {bookings.map((booking, idx) => (
                 <BookingContainer key={idx}>
                     <p>{booking.location}</p>
