@@ -1,19 +1,12 @@
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
 import { useAppState } from '../providers/app-state';
-import {
-    collection,
-    doc,
-    onSnapshot,
-    query,
-    setDoc,
-    where,
-} from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
-import { Unsubscribe } from 'firebase/auth';
+import CompactBookings from './CompactBookings';
 
 const Container = styled.div`
     cursor: pointer;
@@ -68,6 +61,11 @@ const ModalContainer = styled.div`
             height: 2rem;
         }
     }
+
+    & > h2 {
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+    }
 `;
 
 export default function UserBadge(props: {
@@ -83,7 +81,7 @@ export default function UserBadge(props: {
         defaultLocation,
         setDefaultLocation,
         setCurrentLocation,
-        setHasBookingInOtherOffice,
+        futureBookings,
     } = useAppState();
     const [selectedLocation, setSelectedLocation] = useState(
         defaultLocation ? defaultLocation : 'Luleå'
@@ -93,40 +91,6 @@ export default function UserBadge(props: {
         { value: 'Umeå', text: 'Umeå' },
         { value: 'Östersund', text: 'Östersund' },
     ];
-
-    function createDateString(inputDate: Date) {
-        const offset = inputDate.getTimezoneOffset();
-        inputDate = new Date(inputDate.getTime() - offset * 60 * 1000);
-        return inputDate.toISOString().split('T')[0];
-    }
-
-    useEffect(() => {
-        let unsub: Unsubscribe;
-        let today = new Date();
-
-        const q = query(
-            collection(firestore, 'bookings'),
-            where('uid', '==', user?.uid),
-            where('date', '>=', createDateString(today))
-        );
-
-        try {
-            unsub = onSnapshot(q, (querySnapshot) => {
-                const result: any = [];
-
-                querySnapshot.forEach((doc) => {
-                    if (doc.data().location !== defaultLocation) {
-                        result.push(doc.data());
-                    }
-                });
-
-                setHasBookingInOtherOffice(result.length > 0);
-            });
-        } catch (e) {}
-
-        return () => unsub && unsub();
-        // eslint-disable-next-line
-    }, [defaultLocation]);
 
     async function handleChangeDefaultLocation() {
         await setDoc(
@@ -148,6 +112,12 @@ export default function UserBadge(props: {
                     src={props.photoUrl}
                     onClick={() => props.setClicks(props.clicks + 1)}
                 />
+                {futureBookings.length > 0 && (
+                    <FontAwesomeIcon
+                        icon={faCircleExclamation}
+                        style={{ color: 'orange' }}
+                    />
+                )}
                 <p>{props.name},</p>
                 <p>
                     {props.defaultLocation ? props.defaultLocation : 'Hemlös'}
@@ -163,14 +133,11 @@ export default function UserBadge(props: {
                     close={() => setModal(!modal)}
                     isDefaultLocationModal={true}
                 >
-                    <header>
-                        <h1>Byt ordinarie ort</h1>
-                    </header>
+                    <header></header>
                     <ModalContainer>
-                        <p>
-                            Välj din placeringsort. Du kan fortfarande boka
-                            platser på andra kontor.
-                        </p>
+                        <CompactBookings futureBookings={futureBookings} />
+                        <h2>Välj placeringsort</h2>
+                        <p>Du kan fortfarande boka platser på andra kontor.</p>
                         <div>
                             <select
                                 id="select-town"

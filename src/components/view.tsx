@@ -183,6 +183,7 @@ export default function View() {
         removeBooking,
         clearBookings,
         lightmode,
+        setFutureBookings,
     } = useAppState();
     const [loading, setLoading] = useState<boolean>(true);
     const [clicks, setClicks] = useState<number>(0);
@@ -231,6 +232,12 @@ export default function View() {
         }
     }
 
+    function createDateString(inputDate: Date) {
+        const offset = inputDate.getTimezoneOffset();
+        inputDate = new Date(inputDate.getTime() - offset * 60 * 1000);
+        return inputDate.toISOString().split('T')[0];
+    }
+
     useEffect(() => {
         fetchDefaultLocation();
     }, []);
@@ -239,6 +246,36 @@ export default function View() {
         if (clicks === 10) logout();
         // eslint-disable-next-line
     }, [clicks]);
+
+    useEffect(() => {
+        let unsub: Unsubscribe;
+        let today = new Date();
+
+        const q = query(
+            collection(firestore, 'bookings'),
+            where('uid', '==', user?.uid),
+            where('date', '>=', createDateString(today))
+        );
+
+        try {
+            unsub = onSnapshot(q, (querySnapshot) => {
+                let futureBookings: Booking[] = [];
+                querySnapshot.forEach((doc) => {
+                    if (doc.data().location !== defaultLocation) {
+                        const booking = {
+                            id: doc.id,
+                            ...doc.data(),
+                        };
+                        futureBookings.push(booking as Booking);
+                    }
+                });
+                setFutureBookings(futureBookings);
+            });
+        } catch (e) {}
+
+        return () => unsub && unsub();
+        // eslint-disable-next-line
+    }, [defaultLocation]);
 
     useEffect(() => {
         clearBookings();

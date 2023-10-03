@@ -4,7 +4,7 @@ import { LightMode } from '../components/DarkMode';
 
 interface AppStateContext {
     user: User | null;
-    hasBookingInOtherOffice: boolean;
+    futureBookings: Booking[];
     week: Day[];
     numOfSeats: number;
     numOfParkingSpots: number;
@@ -16,7 +16,7 @@ interface AppStateContext {
     setUser: (payload: User) => void;
     clearUser: () => void;
     setWeek: (payload: Day[]) => void;
-    setHasBookingInOtherOffice: (payload: boolean) => void;
+    setFutureBookings: (payload: Booking[]) => void;
     setNumOfSeats: (payload: number) => void;
     setNumOfParkingSpots: (payload: number) => void;
     setCurrentLocation: (payload: string) => void;
@@ -30,7 +30,7 @@ interface AppStateContext {
 interface AppStateAction {
     type:
         | 'SET_USER'
-        | 'SET_HAS_BOOKING_IN_OTHER_OFFICE'
+        | 'SET_FUTURE_BOOKINGS'
         | 'CLEAR_USER'
         | 'SET_WEEK'
         | 'SET_NUM_OF_SEATS'
@@ -75,12 +75,11 @@ const reducer = (
                 user: action.payload as User,
             };
 
-        case 'SET_HAS_BOOKING_IN_OTHER_OFFICE':
+        case 'SET_FUTURE_BOOKINGS':
             return {
                 ...state,
-                hasBookingInOtherOffice: action.payload,
+                futureBookings: action.payload as Booking[],
             };
-
         case 'CLEAR_USER':
             return {
                 ...state,
@@ -157,8 +156,8 @@ export default function AppStateProvider({
     children: ReactNode;
 }) {
     const setUser = (payload: User) => dispatch({ type: 'SET_USER', payload });
-    const setHasBookingInOtherOffice = (payload: boolean) =>
-        dispatch({ type: 'SET_HAS_BOOKING_IN_OTHER_OFFICE', payload });
+    const setFutureBookings = (payload: Booking[]) =>
+        dispatch({ type: 'SET_FUTURE_BOOKINGS', payload });
     const clearUser = () => dispatch({ type: 'CLEAR_USER' });
     const setWeek = (payload: Day[]) => dispatch({ type: 'SET_WEEK', payload });
     const setNumOfSeats = (payload: number) =>
@@ -181,7 +180,7 @@ export default function AppStateProvider({
 
     const [state, dispatch] = useReducer(reducer, {
         user: null,
-        hasBookingInOtherOffice: false,
+        futureBookings: [],
         week: [],
         numOfSeats: 0,
         numOfParkingSpots: 0,
@@ -197,7 +196,7 @@ export default function AppStateProvider({
         setUser,
         clearUser,
         setWeek,
-        setHasBookingInOtherOffice,
+        setFutureBookings,
         setNumOfSeats,
         setNumOfParkingSpots,
         setCurrentLocation,
