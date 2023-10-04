@@ -6,6 +6,10 @@ The app formerly known as "_Finns det plats?_"
 
 Run `pnpm install` followed by `pnpm dev` after a successful installation.
 
+## Project deploy
+
+Run `pnpm deploy-it` to build and deploy the application.
+
 ## Database
 
 This project uses Firebase and Firestore to store data. If the project has not been moved to Cygni when used, the owner Magnus Brandt hosts the database. He can add permissions to the project (via private mail) and can be reached on Slack.
