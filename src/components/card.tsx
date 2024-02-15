@@ -1,119 +1,183 @@
-import { faDisplay, faInfoCircle, faParking } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
-import styled from 'styled-components'
+import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
+import styled from 'styled-components';
 
-import { Booking } from '../providers/app-state'
-import { fadeIn } from '../utils/keyframes'
-import { hasPassed, isToday, isWeekend, parseDate, parseDay, parseMonth } from '../utils/week'
-import Button from './button'
-import Modal from './modal'
+import { Booking, useAppState } from '../providers/app-state';
+import { fadeIn } from '../utils/keyframes';
+import {
+  hasPassed,
+  isToday,
+  parseDate,
+  parseDay,
+  parseMonth,
+} from '../utils/week';
+import Button from './button';
+import Modal from './modal';
+import useForceUpdateInterval from '../hooks/useForceUpdateInterval';
 
 interface Styled {
-  date: string
+  date: string;
 }
 
 interface Props extends Styled {
-  bookings: Booking[]
+  bookings: Booking[];
 }
 
-const Container = styled.div<Styled>`
+const Wrapper = styled.div<Styled>`
+  opacity: ${({ date }) => (hasPassed(date) ? '0.4' : '1')};
+`;
+
+const DateTitle = styled.div<Styled>`
+  &.dark {
+    .dayname {
+      color: white;
+    }
+    .bottom-row {
+      color: #ccc;
+    }
+    .today-arrow {
+      color: orange;
+    }
+
+    &:hover {
+      background-color: #222;
+    }
+  }
   display: flex;
-  border-radius: .5rem;
-  padding: ${({ date }) => isToday(date) ? '.5rem 1rem' : '.5rem'};
-  background-color: ${({ date }) => hasPassed(date) ? 'rgba(255, 255, 255, 40%)' 
-    : isToday(date) ? 'white' 
-    : 'rgb(250, 250, 250)'};
-  box-shadow: 0 .25rem .25rem rgba(0, 0, 0, 15%);
-  margin-left: ${({ date }) => isToday(date) ? '-1rem' : '0'};
-  margin-right: ${({ date }) => isToday(date) ? '-1rem' : '0'};
-  animation-name: ${fadeIn};
-  -webkit-animation-name: ${fadeIn};
-  animation-duration: .3s;
-  -webkit-animation-duration: .3s;
-  animation-timing-function: ease-in;
-  -webkit-animation-timing-function: ease-in;
+  flex-direction: column;
+  font-family: 'Roboto Condensed', sans-serif;
+  gap: 0.2rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #555;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+  min-width: 6rem;
+  margin-right: 2rem;
 
   @media screen and (max-width: 500px) {
-    border-radius: ${({ date }) => isToday(date) ? '0' : '.5rem'};
+    margin-right: 0;
   }
 
-  @media screen and (min-width: 501px) {
-    margin-top: 1rem;
-  }
-
-  & .date {
-    display: flex;
-    align-items: center;
-    font-size: ${({ date }) => isToday(date) ? '4rem' : '3rem'};
-    line-height: ${({ date }) => isToday(date) ? '4rem' : '3rem'};
-    letter-spacing: -.25rem;
-    font-weight: ${({ date }) => isToday(date) ? '400' : '300'};
-    font-family: 'Roboto Condensed', sans-serif;
-    color: ${({ date }) => hasPassed(date) ? 'rgb(150, 150, 150)' 
-      : isWeekend(date) ? 'rgb(200, 80, 80)' 
-      : '#222'};
-  }
-
-  & .daymonth {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 .5rem;
-
-    .dayname {
-      font-size: ${({ date }) => isToday(date) ? '1.5rem' : '1.25rem'};
-      line-height: ${({ date }) => isToday(date) ? '1.75rem' : '1.5rem'};
-      letter-spacing: -.05rem;
-      font-family: 'Roboto Condensed', sans-serif;
-      font-weight: 400;
-      color: ${({ date }) => hasPassed(date) ? 'rgb(180, 180, 180)' 
-        : isWeekend(date) ? 'rgb(200, 120, 120)' 
-        : '#555'};
-      text-transform: uppercase;
-
-      :first-letter {
-        font-size: ${({ date }) => isToday(date) ? '2.25rem' : '1.75rem'};
-      }
-    }
-
-    .month {
-      font-size: ${({ date }) => isToday(date) ? '1.25rem' : '.9rem'};
-      line-height: ${({ date }) => isToday(date) ? '1.25rem' : '.9rem'};
-      font-weight: 400;
-      color: ${({ date }) => hasPassed(date) ? 'rgb(190, 190, 190)' 
-        : isWeekend(date) ? 'rgb(200, 150, 150)' 
-        : '#888'};
-      text-transform: uppercase;
-      font-family: 'Roboto Condensed', sans-serif;
-    }
-  }
-
-  & .info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 .5rem;
-    margin-right: .5rem;
-    font-size: 1.25rem;
-    color: rgb(6, 155, 229);
+  &:hover {
+    background-color: #d9d9d9;
     cursor: pointer;
+  }
+
+  & .dayname {
+    color: black;
+    font-size: 1.2rem;
+  }
+
+  & .bottom-row {
+    display: flex;
+    gap: 0.1rem;
+  }
+
+  .today-arrow {
+    color: rgba(200, 0, 0);
+    animation: bounce 1.5s infinite;
+    animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    animation-name: bounce;
+    transform: translateX(0.2rem);
+  }
+
+  @keyframes bounce {
+    0% {
+      transform: translateX(0.2rem);
+    }
+    80% {
+      transform: translateX(0.9rem);
+    }
+    100% {
+      transform: translateX(0.2rem);
+    }
+  }
+`;
+
+const Container = styled.div<Styled>`
+  &.dark {
+    background-color: black;
+    color: #ccc;
+    outline: #ccc 1px solid;
+    box-shadow: none;
+    /* margin: -1px; */
+
+    .actions .action-pair.labeled:before {
+      background-color: black;
+      color: white;
+    }
+  }
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 15%);
+  animation-name: ${fadeIn};
+  -webkit-animation-name: ${fadeIn};
+  animation-duration: 0.3s;
+  -webkit-animation-duration: 0.3s;
+  animation-timing-function: ease-in;
+  -webkit-animation-timing-function: ease-in;
+  background-color: white;
+
+  @media screen and (max-width: 500px) {
+    width: 100vw;
+    border-radius: 0;
   }
 
   & .actions {
     display: flex;
+    gap: 1rem;
+    & .left {
+      display: flex;
+    }
 
-    >:first-child {
-      margin-right: .5rem;
+    & .action-pair {
+      position: relative;
+      display: flex;
+      gap: 0.2rem;
+
+      & > div:nth-child(1) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      & > div:nth-child(2) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+    & .action-pair.labeled {
+      &:before {
+        content: 'Kontorsplats';
+        background-color: white;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        padding: 0 0.5rem;
+        position: absolute;
+        top: 0;
+        color: #111;
+        font-weight: 500;
+        font-size: 0.8rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(-130%);
+      }
+      &.p:before {
+        content: 'Parkering';
+      }
     }
   }
-`
+`;
 
 const UserDetails = styled.div`
   display: flex;
   align-items: center;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 
   & > img {
     width: 1.5rem;
@@ -122,69 +186,170 @@ const UserDetails = styled.div`
   }
 
   & > span {
-    margin-left: .5rem;
+    margin-left: 0.5rem;
     font-weight: 700;
   }
-`
+`;
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  & span {
+    font-weight: normal;
+  }
+  h4 {
+    margin-top: 0.5rem;
+  }
+  .name-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0 1rem;
+  }
+`;
 
 export default function Card({ date, bookings }: Props) {
-  const [modal, setModal] = useState<boolean>(false)
-  const dBookings = bookings.filter(({ type }) => type === 'd')
-  const pBookings = bookings.filter(({ type }) => type === 'p')
+  const [modal, setModal] = useState<boolean>(false);
+  const dBookings = bookings.filter(({ type }) => type === 'd');
+  const dBookingsPart1 = dBookings.filter(
+    ({ partOfDay }) => partOfDay === undefined || partOfDay === 1
+  );
+  const dBookingsPart2 = dBookings.filter(({ partOfDay }) => partOfDay === 2);
+  const pBookings = bookings.filter(({ type }) => type === 'p');
+  const pBookingsPart1 = pBookings.filter(
+    ({ partOfDay }) => partOfDay === undefined || partOfDay === 1
+  );
+  const pBookingsPart2 = pBookings.filter(({ partOfDay }) => partOfDay === 2);
 
-  return <>
-    <Container date={date}>
-      <div className='date'>
-        {parseDate(date)}
-      </div>
+  const { lightmode } = useAppState();
 
-      <div className='daymonth'>
-        <div className='dayname'>
-          {parseDay(date)}
-        </div>
+  useForceUpdateInterval({ seconds: 10 }); // Makes sure "Today" stays fresh when window is open over several days
 
-        <div className='month'>
-          {parseMonth(date)}
-        </div>
-      </div>
+  return (
+    <>
+      <Wrapper date={date}>
+        <Container className={lightmode} date={date}>
+          <DateTitle
+            className={lightmode}
+            date={date}
+            onClick={() => setModal(!modal)}
+          >
+            <span className='dayname'>{parseDay(date)}</span>
+            <div className='bottom-row'>
+              <span className='date'>{parseDate(date)}</span>
+              <span className='month'>{parseMonth(date)}</span>
+              {isToday(date) && (
+                <div className='today-arrow right'>
+                  <FontAwesomeIcon icon={faLeftLong} />
+                </div>
+              )}
+            </div>
+          </DateTitle>
 
-      {(dBookings.length > 0 || pBookings.length > 0) && <div className='info' onClick={() => setModal(!modal)}>
-        <FontAwesomeIcon 
-          icon={faInfoCircle}
-          style={{ fontSize: isToday(date) ? '2rem' : '1.5rem' }}
-        />
-      </div>}
+          <div className='actions'>
+            <div
+              className={`action-pair ${isToday(date) ? 'labeled' : 'labeled'}`}
+            >
+              <Button
+                type='d'
+                date={date}
+                partOfDay={1}
+                bookings={dBookingsPart1}
+              />
+              <Button
+                type='d'
+                date={date}
+                partOfDay={2}
+                bookings={dBookingsPart2}
+              />
+            </div>
+            <div
+              className={`action-pair p ${
+                isToday(date) ? 'labeled' : 'labeled'
+              }`}
+            >
+              <Button
+                type='p'
+                date={date}
+                partOfDay={1}
+                bookings={pBookingsPart1}
+              />
+              <Button
+                type='p'
+                date={date}
+                partOfDay={2}
+                bookings={pBookingsPart2}
+              />
+            </div>
+          </div>
+        </Container>
+        {modal && (
+          <Modal close={() => setModal(!modal)}>
+            <header>
+              {parseDay(date) + ' ' + parseDate(date) + ' ' + parseMonth(date)}
+            </header>
 
-      <div className='actions'>
-        <Button type="d" date={date} bookings={dBookings} />
-        <Button type="p" date={date} bookings={pBookings} />
-      </div>
-    </Container>
+            <Main>
+              <h4>Kontorsplats</h4>
+              <div className='name-list'>
+                {dBookingsPart1.length > 0 && (
+                  <div>
+                    <h5>Förmiddag</h5>
+                    {dBookingsPart1.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className='name-list'>
+                {dBookingsPart2.length > 0 && (
+                  <div>
+                    <h5>Eftermiddag</h5>
+                    {dBookingsPart2.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-    {modal && <Modal close={() => setModal(!modal)}>
-      <header>
-        {parseDay(date) + ' ' + parseDate(date) + ' ' + parseMonth(date)}
-      </header>
+              <h4>Parkering</h4>
+              <div className='name-list'>
+                {pBookingsPart1.length > 0 && (
+                  <div>
+                    <h5>Förmiddag</h5>
+                    {pBookingsPart1.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-      <main>
-        {dBookings.length > 0 && <div>
-          <FontAwesomeIcon style={{ fontSize: '1.5rem' }} icon={faDisplay} />
-          {dBookings.map(({ displayName, photoURL }, key) =>
-            <UserDetails key={key}>
-              <img src={photoURL} alt={displayName} />
-              <span>{displayName}</span>
-            </UserDetails>)}
-        </div>}
-
-        {pBookings.length > 0 && <div style={{ marginTop: '2rem' }}>
-          <FontAwesomeIcon style={{ fontSize: '1.5rem' }} icon={faParking} />
-          {pBookings.map(({ displayName, photoURL }, key) =>
-            <UserDetails key={key}>
-              <img src={photoURL} alt={displayName} />
-              <span>{displayName}</span>
-            </UserDetails>)}
-        </div>}
-      </main>
-    </Modal>}
-  </>
+              <div className='name-list'>
+                {pBookingsPart2.length > 0 && (
+                  <div>
+                    <h5>Eftermiddag</h5>
+                    {pBookingsPart2.map(({ displayName, photoURL }, key) => (
+                      <UserDetails key={key}>
+                        <img src={photoURL} alt={displayName} />
+                        <span>{displayName}</span>
+                      </UserDetails>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </Main>
+          </Modal>
+        )}
+      </Wrapper>
+    </>
+  );
 }

@@ -1,4 +1,4 @@
-import { keyframes } from 'styled-components'
+import { keyframes } from 'styled-components';
 
 export const fadeInOut = keyframes`
   0% { 
@@ -19,7 +19,7 @@ export const fadeInOut = keyframes`
     opacity: 0;
     -webkit-opacity: 0;
    }
-`
+`;
 
 export const notice = keyframes`
   0% { 
@@ -38,7 +38,7 @@ export const notice = keyframes`
     opacity: 1;
     -webkit-opacity: 1;
    }
-`
+`;
 
 export const fadeIn = keyframes`
   0% { 
@@ -49,7 +49,7 @@ export const fadeIn = keyframes`
     opacity: 1;
     -webkit-opacity: 1;
   }
-`
+`;
 
 export const fadeOut = keyframes`
   0% { 
@@ -60,4 +60,4 @@ export const fadeOut = keyframes`
     opacity: 0; 
     -webkit-opacity: 0;
   }
-`
+`;

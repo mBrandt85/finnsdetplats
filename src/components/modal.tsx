@@ -1,11 +1,12 @@
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ReactNode } from 'react'
-import styled from 'styled-components'
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ReactNode } from 'react';
+import ReactDOM from 'react-dom';
+import styled from 'styled-components';
 
 interface Props {
-  children: ReactNode
-  close: () => void
+  children: ReactNode;
+  close: () => void;
 }
 
 const Backdrop = styled.div`
@@ -20,14 +21,14 @@ const Backdrop = styled.div`
   height: 100%;
   z-index: 10;
   padding: 2rem;
-`
+`;
 
 const Content = styled.div`
-position: relative;
+  position: relative;
   width: 100%;
+  overflow-y: scroll;
   max-width: 24rem;
   max-height: 36rem;
-  z-index: 20;
   padding: 1rem;
   border-radius: 1rem;
   background-color: white;
@@ -36,7 +37,7 @@ position: relative;
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 400;
     font-size: 1.6rem;
-    letter-spacing: -.025rem;
+    letter-spacing: -0.025rem;
     text-transform: capitalize;
   }
 
@@ -47,19 +48,19 @@ position: relative;
   & > footer {
     margin-top: 1rem;
   }
-`
+`;
 
 const Close = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   font-size: 1.5rem;
   cursor: pointer;
-`
+`;
 
 export default function Modal({ children, close }: Props) {
-  return (
+  return ReactDOM.createPortal(
     <Backdrop onClick={close}>
       <Content>
         <Close>
@@ -68,6 +69,7 @@ export default function Modal({ children, close }: Props) {
 
         {children}
       </Content>
-    </Backdrop>
-  )
+    </Backdrop>,
+    document.getElementById('modal') as HTMLElement
+  );
 }
